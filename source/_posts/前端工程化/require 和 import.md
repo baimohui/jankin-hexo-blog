@@ -48,7 +48,6 @@ setTimeout(() => foo = 'baz change', 500);
 import { foo } from './base';
 console.log(foo); // bar
 setTimeout(() => console.log(foo), 600);// baz changed
-复制代码
 ```
 
 上面代码可以看到， 两次获取的foo值是不同的， 因为import是动态加载， 可以感知到`base.js`中的变化.
@@ -67,7 +66,6 @@ import(`./xxxx.js`)
   .catch(err => {
     ...
   });
-复制代码
 ```
 
 但是， 这样存在一个问题： 就是可能出现模块还没有加载完就被调用的情况， 此时会调用失败。
@@ -83,7 +81,6 @@ setTimeout(() => fish = 'fish', 500);
 import { fish } from './base';
 
 console.log(fish); //undefined
-复制代码
 ```
 
 # babel对于import的转码
@@ -130,7 +127,6 @@ function _interopRequireWildcard(obj) {
 function _interopRequireDefault(obj) { 
     return obj && obj.__esModule ? obj : { default: obj }; 
 }
-复制代码
 ```
 
 # 关于两者的使用
@@ -148,7 +144,6 @@ exports.xxx = ...
 const xxx = require('/xxx')
 const {xxx1, xxx2, xxx3} = require('/xxx')
 
-复制代码
 ```
 
 ## import

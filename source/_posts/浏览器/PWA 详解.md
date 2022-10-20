@@ -439,7 +439,6 @@ self.addEventListener('fetch', function(event) {
   }).catch(function (e) {
     console.log("ERROR: " + e)
   }) : console.log("Service workers are not supported in the current browser.")
-复制代码
 ```
 
 以上是 **注册** 一个 `service woker`
