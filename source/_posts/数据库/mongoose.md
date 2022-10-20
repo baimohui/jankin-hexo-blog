@@ -12,7 +12,7 @@ tags:
 
 
 ### 1. 创建模型
-
+<!--more-->
 ```js
 // app/model/visaOnArrivalModel.js
 module.exports=app=>{
@@ -38,7 +38,7 @@ module.exports=app=>{
             Type:{type:String},
             Status:{type:String},
         },
-        // 若想要在表中自动加入创建时间和修改时间可使用以下代码，timestamps里的值名称可以随意修改
+        // 若想要在表中自动加入创建时间和修改时间可使用以下代码，timestamps 里的值名称可以随意修改
         {
             timestamps: { createdAt: 'createAt', updatedAt: 'updateAt' }
         }
@@ -46,8 +46,8 @@ module.exports=app=>{
     return mongoose.model("VisaOnArrivalModel",VisaOnArrivalSchema,"visaonarrivals")
 }
 /*注以上代码
-定义了一张名为visaonarrivals的数据表，其中定义了多个键值名及其类型。（本例键值的数据类型为string类型）
-mongoose中合法数据类型有:
+定义了一张名为 visaonarrivals 的数据表，其中定义了多个键值名及其类型。（本例键值的数据类型为 string 类型）
+mongoose 中合法数据类型有:
 *   String
 *   Number
 *   Date
@@ -61,7 +61,6 @@ mongoose中合法数据类型有:
 
 ```
 
-<!--more-->
 
 ### 2. 查询数据
 
