@@ -1,5 +1,5 @@
 ---
-title: uniapp 开发app日志
+title: uniapp 开发 app 日志
 categories: 
 - uniapp
 tags:
@@ -49,7 +49,7 @@ props: {
 
 （1）开屏广告的定时器没有停止
 
-查看代码发现定时器的停止代码是 `windows.clearInterval(timeout)` 。app 端不存在 windows 属性，直接改成 `clearInterval(timeout)` ，定时器就能正常停止了（ h5 也能执行）。
+查看代码发现定时器的停止代码是 `windows.clearInterval(timeout)` 。app 端不存在 windows 属性，直接改成 `clearInterval(timeout)` ，定时器就能正常停止了（h5 也能执行）。
 
 （2）不能获取到数据，报 `Expected URL scheme 'http' or 'https' but was 'file'`
 
