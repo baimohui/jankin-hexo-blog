@@ -1,5 +1,5 @@
 ---
-title: BFC详解
+title: BFC 详解
 categories: 
 - CSS
 tags: 
@@ -7,15 +7,15 @@ tags:
 - 响应式布局
 ---
 
-## BFC到底是什么东西
+## BFC 到底是什么东西
 
-`BFC` 全称：`Block Formatting Context`， 名为 "块级格式化上下文"。
+`BFC` 全称：`Block Formatting Context`，名为 "块级格式化上下文"。
 
 `W3C`官方解释为：`BFC`它决定了元素如何对其内容进行定位，以及与其它元素的关系和相互作用，当涉及到可视化布局时，`Block Formatting Context`提供了一个环境，`HTML`在这个环境中按照一定的规则进行布局。
 
 简单来说就是，`BFC`是一个完全独立的空间（布局环境），让空间里的子元素不会影响到外面的布局。那么怎么使用`BFC`呢，`BFC`可以看做是一个`CSS`元素属性<!--more-->
 
-## 怎样触发BFC
+## 怎样触发 BFC
 
 这里简单列举几个触发`BFC`使用的`CSS`属性
 
@@ -26,7 +26,7 @@ tags:
 - display: table-cell
 - display: flex
 
-## BFC的规则
+## BFC 的规则
 
 - `BFC` 就是页面中的一个隔离的独立容器，容器内部元素不会影响外部元素
 - `BFC` 就是一个块级元素，块级元素会在垂直方向一个接一个的排列
@@ -35,9 +35,9 @@ tags:
 - `BFC`  区域不会与浮动的容器发生重叠
 - 每个元素的左 `margin` 值和容器的左 `border` 相接触
 
-## BFC解决了什么问题
+## BFC 解决了什么问题
 
-### 1.使用Float脱离文档流，高度塌陷
+### 1.使用 Float 脱离文档流，高度塌陷
 
 ```html
 <!DOCTYPE html>
@@ -112,7 +112,7 @@ tags:
 
 ![img](https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20220304003111.webp)
 
-### 2.Margin边距重叠
+### 2.Margin 边距重叠
 
 ```html
 <!DOCTYPE html>

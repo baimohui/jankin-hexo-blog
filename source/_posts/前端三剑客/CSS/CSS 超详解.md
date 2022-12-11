@@ -36,7 +36,7 @@ CSS 规则是样式表的主体，但有时需要在样式表中包括其它一�
 
 [@namespace](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@namespace) 
 
-告诉 CSS 引擎必须考虑XML命名空间。
+告诉 CSS 引擎必须考虑 XML 命名空间。
 
 [@media](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media)
 
@@ -44,7 +44,7 @@ CSS 规则是样式表的主体，但有时需要在样式表中包括其它一�
 
 [@page](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@page)
 
-描述打印文档时布局的变化.
+描述打印文档时布局的变化。
 
 [@font-face](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@font-face)
 
@@ -60,7 +60,7 @@ CSS 规则是样式表的主体，但有时需要在样式表中包括其它一�
 
 [@charset](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@charset) 
 
-用于定义样式表使用的字符集。它必须是样式表中的第一个元素。如果有多个 `@charset` 被声明，只有第一个会被使用，而且不能在HTML元素或HTML页面的 `<style>` 元素内使用。
+用于定义样式表使用的字符集。它必须是样式表中的第一个元素。如果有多个 `@charset` 被声明，只有第一个会被使用，而且不能在 HTML 元素或 HTML 页面的 `<style>` 元素内使用。
 
 注意：值必须是双引号包裹，且和
 
@@ -95,7 +95,7 @@ link 和 @import 都能导入一个样式文件，它们有什么区别嘛？
 - link 是 HTML 标签，除了能导入 CSS 外，还能导入别的资源，比如图片、脚本和字体等；而 @import 是 CSS 的语法，只能用来导入 CSS；
 - link 导入的样式会在页面加载时同时加载，@import 导入的样式需等页面加载完成后再加载；
 - link 没有兼容性问题，@import 不兼容 ie5 以下；
-- link 可以通过 JS 操作 DOM 动态引入样式表改变样式，而@import不可以。
+- link 可以通过 JS 操作 DOM 动态引入样式表改变样式，而@import 不可以。
 
 [@supports](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@supports) 
 
@@ -112,7 +112,7 @@ link 和 @import 都能导入一个样式文件，它们有什么区别嘛？
 
 ### 2. 选择器
 
-CSS 选择器无疑是其核心之一，对于基础选择器以及一些常用伪类必须掌握。下面列出了常用的选择器。 想要获取更多选择器的用法可以看 [MDN CSS Selectors](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors)。
+CSS 选择器无疑是其核心之一，对于基础选择器以及一些常用伪类必须掌握。下面列出了常用的选择器。想要获取更多选择器的用法可以看 [MDN CSS Selectors](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors)。
 
 **基础选择器**
 
@@ -128,8 +128,8 @@ CSS 选择器无疑是其核心之一，对于基础选择器以及一些常用�
 - `[attr*=val]`：属性包含指定值的元素；
 - `[attr^=val]`	：属性以指定值开头的元素；
 - `[attr$=val]`：属性以指定值结尾的元素；
-- `[attr~=val]`：属性包含指定值(完整单词)的元素(不推荐使用)；
-- `[attr|=val]`：属性以指定值(完整单词)开头的元素(不推荐使用)；
+- `[attr~=val]`：属性包含指定值 (完整单词) 的元素 (不推荐使用)；
+- `[attr|=val]`：属性以指定值 (完整单词) 开头的元素 (不推荐使用)；
 
 **组合选择器**
 
@@ -232,7 +232,7 @@ CSS 选择器无疑是其核心之一，对于基础选择器以及一些常用�
 }
 ```
 
-在W3C标准下，元素的width值即为盒模型中的content的宽度值，height值即为盒模型中的content的⾼度值。
+在 W3C 标准下，元素的 width 值即为盒模型中的 content 的宽度值，height 值即为盒模型中的 content 的⾼度值。
 
 所以 `.box` 元素内容的宽度就为 `200px`，而实际的宽度则是 `width` + `padding-left` + `padding-right` + `border-left-width` + `border-right-width` = 200 + 10 + 10 + 1 + 1 = 222。
 
@@ -269,7 +269,7 @@ IE 盒模型：元素占据的宽度 = margin-left + width + margin-right
 - screen：主要用于屏幕；
 - speech：主要用于语音合成器。
 
-就算资源不匹配media指定的设备类型，但是浏览器依然会加载它。
+就算资源不匹配 media 指定的设备类型，但是浏览器依然会加载它。
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106174048.png" alt="image-20210422135634976" style="zoom:67%;" />
 
@@ -289,7 +289,7 @@ IE 盒模型：元素占据的宽度 = margin-left + width + margin-right
 媒体查询还支持[众多的媒体特性](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Media_queries#媒体特性)，使得它可以写出很复杂的查询条件：
 
 ```css
-/* 用户设备的最小高度为680px或为纵向模式的屏幕设备 */
+/* 用户设备的最小高度为 680px 或为纵向模式的屏幕设备 */
 @media (min-height: 680px), screen and (orientation: portrait) {}
 ```
 
@@ -313,7 +313,7 @@ vertical-align 属性常用于将相邻的文本与元素垂直对齐。[MDN](ht
 
 **baseline**
 
-vertical-align 的默认值，意思为基线对齐。（字母 x 底部所在的位置即为基线，具体可参考 [字母’x’在CSS世界中的角色和故事](https://link.juejin.cn/?target=https%3A%2F%2Fwww.zhangxinxu.com%2Fwordpress%2F2015%2F06%2Fabout-letter-x-of-css%2F)）
+vertical-align 的默认值，意思为基线对齐。（字母 x 底部所在的位置即为基线，具体可参考 [字母’x’在 CSS 世界中的角色和故事](https://link.juejin.cn/?target=https%3A%2F%2Fwww.zhangxinxu.com%2Fwordpress%2F2015%2F06%2Fabout-letter-x-of-css%2F)）
 
 ![image-20210808215528288](https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106174049.png)
 

@@ -229,7 +229,7 @@ ul li img {
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20220305164607.png" alt="image-20210328142248442" style="zoom:67%;" />
 
-`object-fit` 还有一个配套属性 `object-position`，它可以控制图片在其内容框中的位置。（类似于 `background-position`），m默认是 `object-position: 50% 50%`，如果你不希望以图片的居中部分展示，可以使用它去改变图片实际展示的 position 。
+`object-fit` 还有一个配套属性 `object-position`，它可以控制图片在其内容框中的位置。（类似于 `background-position`），m 默认是 `object-position: 50% 50%`，如果你不希望以图片的居中部分展示，可以使用它去改变图片实际展示的 position。
 
 像是这样，`object-position: 100% 50%` 指明从底部开始展示图片。
 
@@ -256,7 +256,7 @@ ul li img {
 >
 ```
 
-接下来还需要考虑，当图片链接挂了，应该如何处理。处理的方式有很多种。最好的处理方式，是我最近在张鑫旭老师的这篇文章中 -- [图片加载失败后CSS样式处理最佳实践](https://www.zhangxinxu.com/wordpress/2020/10/css-style-image-load-fail/) 看到的。这里简单讲下：
+接下来还需要考虑，当图片链接挂了，应该如何处理。处理的方式有很多种。最好的处理方式，是我最近在张鑫旭老师的这篇文章中 -- [图片加载失败后 CSS 样式处理最佳实践](https://www.zhangxinxu.com/wordpress/2020/10/css-style-image-load-fail/) 看到的。这里简单讲下：
 
 1. 利用图片加载失败，触发 `<img>` 元素的 `onerror` 事件，给加载失败的 `<img>` 元素新增一个样式类
 2. 利用新增的样式类，配合 `<img>` 元素的伪元素，展示默认兜底图的同时，还能一起展示 `<img>` 元素的 `alt` 信息
