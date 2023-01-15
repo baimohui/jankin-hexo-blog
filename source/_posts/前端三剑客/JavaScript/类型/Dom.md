@@ -1,5 +1,5 @@
 ---
-title: JS操作dom元素
+title: JS 操作 dom 元素
 categories: 
 - JavaScript
 tags:
@@ -10,27 +10,27 @@ tags:
 
 ```js
 document.getElementById('id')
-// 通过ID获取，上下文只能是document，返回值只获取到一个元素，没有找到返回null
+// 通过 ID 获取，上下文只能是 document，返回值只获取到一个元素，没有找到返回 null
 
 document.getElementsByName('name')
-// 通过name属性获取，上下文只能是document，返回值是一个类数组，没有找到返回空数组
+// 通过 name 属性获取，上下文只能是 document，返回值是一个类数组，没有找到返回空数组
 
 document.getElementByTagName('p')
 var oDiv = document.getElementById('divId')
 oDiv.getElementsByTagName('p')
-// 通过标签获取，上下文可以是document和dom节点，返回值是一个类数组，没有找到返回空数组
+// 通过标签获取，上下文可以是 document 和 dom 节点，返回值是一个类数组，没有找到返回空数组
 
 document.getElementByClassName('class')
-// 通过类名获取，上下文可以是document和dom节点，返回值是一个类数组，没有找到返回空数组，ie8以下不兼容
+// 通过类名获取，上下文可以是 document 和 dom 节点，返回值是一个类数组，没有找到返回空数组，ie8 以下不兼容
 
 document.querySelector('div.class')
-// 通过选择器获取，上下文可以是document和dom节点，返回值只获取到一个元素
+// 通过选择器获取，上下文可以是 document 和 dom 节点，返回值只获取到一个元素
 
 document.querySelectorAll('div.class')
-// 通过选择器获取，上下文可以是document和dom节点，返回值是一个类数组
+// 通过选择器获取，上下文可以是 document 和 dom 节点，返回值是一个类数组
 
-document.documentElement // 获取html
-document.body // 获取body
+document.documentElement // 获取 html
+document.body // 获取 body
 document.body.contentEditable="true" // 文本可编辑
 document.querySelector('video').playbackRate = 3; // 视频播放速度
 ```
@@ -68,9 +68,9 @@ function isElementInViewport (el, offset = 0) {
 `dom.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' })`
 
 ```js
-element.scrollIntoView(); // 等同于element.scrollIntoView(true)
-element.scrollIntoView(alignToTop); // Boolean型参数
-element.scrollIntoView(scrollIntoViewOptions); // Object型参数
+element.scrollIntoView(); // 等同于 element.scrollIntoView(true)
+element.scrollIntoView(alignToTop); // Boolean 型参数
+element.scrollIntoView(scrollIntoViewOptions); // Object 型参数
 ```
 
 `alignToTop` 参数
@@ -98,9 +98,9 @@ element.scrollIntoView(scrollIntoViewOptions); // Object型参数
 var dom = document.getElementById("c-dom");
 var parent = dom.parentNode; // 父节点
 var chils = dom.childNodes; // 返回全部子节点，包含属性节点，文本节点。
-var children = dom.children; // 只返回HTML元素直系子节点，不包括文本节点和属性节点。
+var children = dom.children; // 只返回 HTML 元素直系子节点，不包括文本节点和属性节点。
 var first = dom.firstChild; // 第一个子节点
-var last = dom.lastChild; // 最后一个子节点　
+var last = dom.lastChild; // 最后一个子节点 
 var previous = dom.previousSibling; // 上一个兄弟节点
 var next = dom.nextSbiling; // 下一个兄弟节点
 ```
@@ -185,7 +185,7 @@ element.currentStyle.getAttribute(camelize(style));
 
 #### 7. 面试题
 
-① 将A元素拖拽并放置到B元素中，B元素需要做哪项操作（）？
+① 将 A 元素拖拽并放置到 B 元素中，B 元素需要做哪项操作（）？
 
 - **`event.preventDefault()`**
 - `event.prevent()`
@@ -201,7 +201,7 @@ element.currentStyle.getAttribute(camelize(style));
 - **mouseleave**
 - mousemove
 
-<!-- 不支持冒泡的UI事件：load、unload、resize、abort、error
+<!-- 不支持冒泡的 UI 事件：load、unload、resize、abort、error
 不支持冒泡的焦点事件：blur、focus
 不支持冒泡的鼠标事件：mouseleave、mouseenter -->
 
