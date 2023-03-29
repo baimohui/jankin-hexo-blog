@@ -12,7 +12,7 @@ tags:
 
 #### 1. 虚拟 DOM
 
-我们会根据真实 DOM 生成一棵 virtual DOM，当 virtual DOM 某个节点的数据改变后会生成一个新的 Vnode，然后将 Vnode 和 old Vnode 作对比，发现有不一样的地方就直接修改在真实的 DOM上，然后使 old Vnode 的值为 Vnode。diff 的过程就是调用名为 patch 的函数，比较新旧节点，一边比较一边给真实 DOM 打补丁。
+我们会根据真实 DOM 生成一棵 virtual DOM，当 virtual DOM 某个节点的数据改变后会生成一个新的 Vnode，然后将 Vnode 和 old Vnode 作对比，发现有不一样的地方就直接修改在真实的 DOM 上，然后使 old Vnode 的值为 Vnode。diff 的过程就是调用名为 patch 的函数，比较新旧节点，一边比较一边给真实 DOM 打补丁。
 
 而 virtual DOM 是一个用来表示真实 DOM 的对象，它将真实的 DOM 数据抽取出来，以对象的形式模拟树形结构。比如 dom 是这样的：
 
@@ -70,9 +70,9 @@ function patch (oldVnode, vnode) {
     if (sameVnode(oldVnode, vnode)) {
         patchVnode(oldVnode, vnode)
     } else {
-        const oEl = oldVnode.el // 当前oldVnode对应的真实元素节点
+        const oEl = oldVnode.el // 当前 oldVnode 对应的真实元素节点
         let parentEle = api.parentNode(oEl)  // 父元素
-        createEle(vnode)  // 根据Vnode生成新元素
+        createEle(vnode)  // 根据 Vnode 生成新元素
         if (parentEle !== null) {
             api.insertBefore(parentEle, vnode.el, api.nextSibling(oEl)) // 将新元素添加进父元素
             api.removeChild(parentEle, oldVnode.el)  // 移除以前的旧元素节点
@@ -91,11 +91,11 @@ patch 函数接收两个参数 old Vnode 和 Vnode，分别代表旧节点和新
 ```javascript
 function sameVnode (a, b) {
     return (
-        a.key === b.key &&  // key值
+        a.key === b.key &&  // key 值
         a.tag === b.tag &&  // 标签名
         a.isComment === b.isComment &&  // 是否为注释节点
-        isDef(a.data) === isDef(b.data) &&  // 是否都定义了data，例如onclick , style
-        sameInputType(a, b) // 当标签是<input>的时候，type必须相同
+        isDef(a.data) === isDef(b.data) &&  // 是否都定义了 data，例如 onclick , style
+        sameInputType(a, b) // 当标签是<input>的时候，type 必须相同
     )
 }
 ```
@@ -221,7 +221,7 @@ updateChildren (parentElm, oldCh, newCh) {
 - 如果是 oldS 和 E 匹配上了，那么将执行 `patchVnode(oldS, E)`，同时真实 dom 中的第一个节点会移到队尾，匹配上的两个指针向中间移动；
 - 如果是 oldE 和 S 匹配上了，那么将执行 `patchVnode(oldE, S)`，同时真实 dom 中的最后一个节点会移到最前，匹配上的两个指针向中间移动。
 
-如果四种匹配没有一对是成功的，则又可分为两种情况 ：
+如果四种匹配没有一对是成功的，则又可分为两种情况：
 
 - 如果新旧子节点都存在 key，那么会根据 oldChild 的 key 生成一张 hash 表，用 S 的 key 与 hash 表做匹配，匹配成功就判断 S 和匹配节点是否为 sameNode。如果是，就在真实 dom 中将该节点移到最前面，否则将 S 生成对应的节点插入到 dom 中对应的 oldS 位置，S 指针向中间移动，被匹配 old 中的节点置为 null。
 - 如果没有 key，则直接将 S 生成新节点插入真实 DOM（ps：这下可以解释为什么 v-for 需要设置 key 了，如果没有 key 那么就只会做四种匹配，就算指针中间有可复用的节点都不能被复用了）

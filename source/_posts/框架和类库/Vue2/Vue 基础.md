@@ -10,31 +10,31 @@ tags:
 
 ### 1. MVVM 是什么
 
-MVVM 模式，顾名思义即 Model-View-ViewModel 模式。它萌芽于2005年微软推出的基于 Windows 的用户界面框架 WPF ，前端最早的 MVVM 框架 knockout 在 2010 年发布。 <!-- more -->
+MVVM 模式，顾名思义即 Model-View-ViewModel 模式。它萌芽于 2005 年微软推出的基于 Windows 的用户界面框架 WPF，前端最早的 MVVM 框架 knockout 在 2010 年发布。 <!-- more -->
 
-- **Model 层**： 对应数据层的域模型，它主要做域模型的同步。通过 Ajax/fetch 等 API 完成客户端和服务端业务 Model 的同步。在层间关系里，它主要用于抽象出 ViewModel 中视图的 Model。 
-- **View 层**：作为视图模板存在，在 MVVM 里，整个 View 是⼀个动态模板。除了定义结构、布局外，它展示的是 ViewModel 层的数据和状态。View 层不负责处理状态，View 层做的是数据绑定的声明、 指令的声明、 事件绑定的声明。
-- **ViewModel 层**：把 View 需要的层数据暴露，并对 View 层的数据绑定声明、 指令声明、 事件绑定声明负责，也就是处理 View 层的具体业务逻辑。ViewModel 底层会做好绑定属性的监听。当 ViewModel 中数据变化，View 层会得到更新；而当 View 中声明了数据的双向绑定（通常是表单元素），框架也会监听 View 层（表单）值的变化。⼀旦值变化，View 层绑定的 ViewModel 中的数据也会得到自动更新。
+- **Model 层**：对应数据层的域模型，它主要做域模型的同步。通过 Ajax/fetch 等 API 完成客户端和服务端业务 Model 的同步。在层间关系里，它主要用于抽象出 ViewModel 中视图的 Model。 
+- **View 层**：作为视图模板存在，在 MVVM 里，整个 View 是⼀个动态模板。除了定义结构、布局外，它展示的是 ViewModel 层的数据和状态。View 层不负责处理状态，View 层做的是数据绑定的声明、指令的声明、事件绑定的声明。
+- **ViewModel 层**：把 View 需要的层数据暴露，并对 View 层的数据绑定声明、指令声明、事件绑定声明负责，也就是处理 View 层的具体业务逻辑。ViewModel 底层会做好绑定属性的监听。当 ViewModel 中数据变化，View 层会得到更新；而当 View 中声明了数据的双向绑定（通常是表单元素），框架也会监听 View 层（表单）值的变化。⼀旦值变化，View 层绑定的 ViewModel 中的数据也会得到自动更新。
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106174612.png" alt="image-20210326141639536" style="zoom: 67%;" />
 
-<!--示例：计数器的MVVM-->
+<!--示例：计数器的 MVVM-->
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106174619.png" alt="01-计数器的MVVM" style="zoom:80%;" />
 
 ### 2. MVVM 优越点
 
-**优点:** 
+**优点：** 
 
 1. 分离视图和模型，降低代码耦合，提高视图或者逻辑的重用性；
 
-   比如 View 可以独立于 Model 变化和修改，⼀个 ViewModel 可以绑定在不同的 View 上，当 View 变化时 Model 可以不变，当 Model 变化时 View 也可以不变。你可以把⼀些视图逻辑放在⼀个 ViewModel 里面，让很多 view 重用这段视图逻辑 。
+   比如 View 可以独立于 Model 变化和修改，⼀个 ViewModel 可以绑定在不同的 View 上，当 View 变化时 Model 可以不变，当 Model 变化时 View 也可以不变。你可以把⼀些视图逻辑放在⼀个 ViewModel 里面，让很多 view 重用这段视图逻辑。
 
-2. 提高可测试性：ViewModel 的存在可以帮助开发者更好地编写测试代码 ；
+2. 提高可测试性：ViewModel 的存在可以帮助开发者更好地编写测试代码；
 
-3. 自动更新 dom：利用双向绑定，数据更新后视图自动更新，让开发者从繁琐的手动 dom 中解放 。
+3. 自动更新 dom：利用双向绑定，数据更新后视图自动更新，让开发者从繁琐的手动 dom 中解放。
 
-**缺点:** 
+**缺点：** 
 
 1. Bug 很难被调试：因为使用双向绑定的模式，当你看到界面异常了，有可能是 View 的代码有 Bug，也可能是 Model 的代码有问题。数据绑定使得⼀个位置的 Bug 被快速传递到别的位置，要定位原始出问题的地方并不容易。另外，数据绑定的声明是指令式地写在 View 的模版当中的，这些内容是没办法去打断点 debug 的；
 2. ⼀个大的模块中 model 也会很大，虽然使用方便且容易保证数据的⼀致性，但是长期持有，不释放内存就造成了更多内存的浪费；
@@ -135,7 +135,7 @@ vue 实例的消亡阶段。实例还可以被使用，直到 `destroyed()`，�
 prop 只可以从上一级组件传递到下一级组件（父子组件），即所谓的单向数据流。而且 prop 只读，不可被修改，所有修改都会失效并警告。下面通过一个例子说明父组件如何向子组件传递数据：在子组件 `article.vue` 中如何获取父组件 `section.vue` 中的数据 `articles:['红楼梦', '西游记','三国演义']`
 
 ```html
-<!--section父组件-->
+<!--section 父组件-->
 <template>
   <div class="section">
     <com-article :articles="articleList"></com-article>
@@ -226,7 +226,7 @@ export default {
 
 ### 2. eventBus
 
-`eventBus` 又称为事件总线，在 vue 中相当于所有组件共用的事件中心，可以向该中心注册发送事件或接收事件， 所以组件都可以通知其他组件。当项目较大时，eventBus 容易导致难以维护。其使用方法如下：
+`eventBus` 又称为事件总线，在 vue 中相当于所有组件共用的事件中心，可以向该中心注册发送事件或接收事件，所以组件都可以通知其他组件。当项目较大时，eventBus 容易导致难以维护。其使用方法如下：
 
 **① 初始化**
 
@@ -239,7 +239,7 @@ export const EventBus = new Vue()
 
 **② 发送事件**
 
-假设你有两个组件: `additionNum` 和 `showNum`，这两个组件可以是兄弟组件也可以是父子组件；这里我们以兄弟组件为例:
+假设你有两个组件：`additionNum` 和 `showNum`，这两个组件可以是兄弟组件也可以是父子组件；这里我们以兄弟组件为例：
 
 ```html
 <!--父组件-->
@@ -293,7 +293,7 @@ export default {
 // showNum.vue 中接收事件
 
 <template>
-  <div>计算和: {{count}}</div>
+  <div>计算和：{{count}}</div>
 </template>
 
 <script>
@@ -343,23 +343,23 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 </template>
 
 <script>
-  import ChildA from './components/ChildA' // 导入A组件
-  import ChildB from './components/ChildB' // 导入B组件
+  import ChildA from './components/ChildA' // 导入 A 组件
+  import ChildB from './components/ChildB' // 导入 B 组件
 
   export default {
     name: 'App',
-    components: {ChildA, ChildB} // 注册A、B组件
+    components: {ChildA, ChildB} // 注册 A、B 组件
   }
 </script>
 ```
 
 ```html
-<!--子组件childA-->
+<!--子组件 childA-->
 <template>
   <div id="childA">
-    <h1>我是A组件</h1>
-    <button @click="transform">点我让B组件接收到数据</button>
-    <p>因为你点了B，所以我的信息发生了变化：{{BMessage}}</p>
+    <h1>我是 A 组件</h1>
+    <button @click="transform">点我让 B 组件接收到数据</button>
+    <p>因为你点了 B，所以我的信息发生了变化：{{BMessage}}</p>
   </div>
 </template>
 
@@ -367,18 +367,18 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
   export default {
     data() {
       return {
-        AMessage: 'Hello，B组件，我是A组件'
+        AMessage: 'Hello，B 组件，我是 A 组件'
       }
     },
     computed: {
       BMessage() {
-        // 这里存储从store里获取的B组件的数据
+        // 这里存储从 store 里获取的 B 组件的数据
         return this.$store.state.BMsg
       }
     },
     methods: {
       transform() {
-        // 触发receiveAMsg，将A组件的数据存放到store里去
+        // 触发 receiveAMsg，将 A 组件的数据存放到 store 里去
         this.$store.commit('receiveAMsg', {
           AMsg: this.AMessage
         })
@@ -392,9 +392,9 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 <!--子组件 childB-->
 <template>
   <div id="childB">
-    <h1>我是B组件</h1>
-    <button @click="transform">点我让A组件接收到数据</button>
-    <p>因为你点了A，所以我的信息发生了变化：{{AMessage}}</p>
+    <h1>我是 B 组件</h1>
+    <button @click="transform">点我让 A 组件接收到数据</button>
+    <p>因为你点了 A，所以我的信息发生了变化：{{AMessage}}</p>
   </div>
 </template>
 
@@ -402,18 +402,18 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
   export default {
     data() {
       return {
-        BMessage: 'Hello，A组件，我是B组件'
+        BMessage: 'Hello，A 组件，我是 B 组件'
       }
     },
     computed: {
       AMessage() {
-        // 这里存储从store里获取的A组件的数据
+        // 这里存储从 store 里获取的 A 组件的数据
         return this.$store.state.AMsg
       }
     },
     methods: {
       transform() {
-        // 触发receiveBMsg，将B组件的数据存放到store里去
+        // 触发 receiveBMsg，将 B 组件的数据存放到 store 里去
         this.$store.commit('receiveBMsg', {
           BMsg: this.BMessage
         })
@@ -424,23 +424,23 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 ```
 
 ```javascript
-// Vuex的store.js
+// Vuex 的 store.js
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 const state = {
-  // 初始化A和B组件的数据，等待获取
+  // 初始化 A 和 B 组件的数据，等待获取
   AMsg: '',
   BMsg: ''
 }
 
 const mutations = {
   receiveAMsg(state, payload) {
-    // 将A组件的数据存放于state
+    // 将 A 组件的数据存放于 state
     state.AMsg = payload.AMsg
   },
   receiveBMsg(state, payload) {
-    // 将B组件的数据存放于state
+    // 将 B 组件的数据存放于 state
     state.BMsg = payload.BMsg
   }
 }
@@ -453,7 +453,7 @@ export default new Vuex.Store({
 
 ### 4. ref / $refs
 
-`ref`：如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例，可以通过实例直接调用组件的方法或访问数据， 我们看一个 `ref` 来访问组件的例子:
+`ref`：如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例，可以通过实例直接调用组件的方法或访问数据，我们看一个 `ref` 来访问组件的例子：
 
 ```javascript
 // 子组件 A.vue
@@ -494,7 +494,7 @@ export default {
 ### computed 
 
 - computed 是计算属性，也就是计算值，适用于计算比较消耗性能的计算场景
-- computed 具有缓存性，computed 的值在 getter 执行后是会缓存的，只有在它依赖的属性值改变之后，下⼀次获取 computed的值时才会重新调用对应的 getter 来计算 
+- computed 具有缓存性，computed 的值在 getter 执行后是会缓存的，只有在它依赖的属性值改变之后，下⼀次获取 computed 的值时才会重新调用对应的 getter 来计算 
 
 ### watch
 
@@ -526,7 +526,7 @@ v-if 绝对是更消耗性能的，因为 v-if 在显示隐藏过程中有 DOM �
 
 ### 实现
 
-本篇文章默认您已经会使用`webpack`或者`vue-cli`来进行环境的搭建，并且具有一定的vue基础，如果您目前是一个新手，那么网上搜索一下就好，相关文章非常多，这里就不再赘述了。 话不多说，直接上代码。 为了方便日后代码的可维护性，我把相关方法写在了一个新建的filter.js文件里
+本篇文章默认您已经会使用`webpack`或者`vue-cli`来进行环境的搭建，并且具有一定的 vue 基础，如果您目前是一个新手，那么网上搜索一下就好，相关文章非常多，这里就不再赘述了。话不多说，直接上代码。为了方便日后代码的可维护性，我把相关方法写在了一个新建的 filter.js 文件里
 
 
 
@@ -534,7 +534,7 @@ v-if 绝对是更消耗性能的，因为 v-if 在显示隐藏过程中有 DOM �
 
 
 
-接下来进入filter.js文件中，首先引入vue-router：`import router from "./router";`然后我们使用`router.beforEach`方法：
+接下来进入 filter.js 文件中，首先引入 vue-router：`import router from "./router";`然后我们使用`router.beforEach`方法：
 
 ```javascript
 router.beforeEach((to, from, next) => {
@@ -553,12 +553,12 @@ router.beforeEach((to, from, next) => {
             });
         }
     } else {
-        next()//若点击的是不需要验证的页面,则进行正常的路由跳转
+        next()//若点击的是不需要验证的页面，则进行正常的路由跳转
     }
 });
 ```
 
-beforEach 其实是 vur-router 的钩子函数，可以理解为每个 router 跳转之前都会调用的一个方法，既然有before同理当然也有 afterEach，这个我们以后再讲。
+beforEach 其实是 vur-router 的钩子函数，可以理解为每个 router 跳转之前都会调用的一个方法，既然有 before 同理当然也有 afterEach，这个我们以后再讲。
 
 首先来解释下 beforEach 的三个参数：
 
@@ -566,9 +566,9 @@ beforEach 其实是 vur-router 的钩子函数，可以理解为每个 router �
 2. from：当前导航正要离开的路由。
 3. next：一个 function，一定要调用该方法来 resolve 这个钩子。执行效果依赖 next 方法的调用参数。
 
-- `next()`: 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是 confirmed （确认的）。
+- `next()`: 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是 confirmed（确认的）。
 - `next(false)`: 中断当前的导航。如果浏览器的 URL 改变了（可能是用户手动或者浏览器后退按钮），那么 URL 地址会重置到 from 路由对应的地址。
-- **next('/') 或者 next({ path: '/' }): 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。** 你可以向 next 传递任意位置对象，且允许设置诸如 replace: true、name: ‘home’ 之类的选项以及任何用在 router-link 的 to prop 或 router.push 中的选项，注意，next 可以通过 query 传递参数。
+- **next('/') 或者 next({ path: '/' }): 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。** 你可以向 next 传递任意位置对象，且允许设置诸如 replace: true、name: ‘home’之类的选项以及任何用在 router-link 的 to prop 或 router.push 中的选项，注意，next 可以通过 query 传递参数。
 - `next(error)`: (2.4.0+) 如果传入 next 的参数是一个 Error 实例，则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
 
 ### 说明
@@ -579,7 +579,7 @@ beforEach 其实是 vur-router 的钩子函数，可以理解为每个 router �
  在以上这种情况下，
  to：代表着路由`/mine`，我们要进入的路由。
  from：代表着路由`/home`，我们将要离开的路由。
- 注意，使用beforEach最后必须要调用`next()`，否则会报错，如果不传参数，我们就会成功进入到`/mine`，如果我们传递参数，例如`next('/login')`，那么我们在点击任何路由都会跳转到`/login`界面。
+ 注意，使用 beforEach 最后必须要调用`next()`，否则会报错，如果不传参数，我们就会成功进入到`/mine`，如果我们传递参数，例如`next('/login')`，那么我们在点击任何路由都会跳转到`/login`界面。
  但是我们的需求是只有点击需要进行登录验证的页面才进行拦截跳转，因此，我们需要加一些判断条件来进行路由的筛选。
 
 ```javascript
@@ -590,8 +590,8 @@ if (to.matched.some(record => record.meta.auth)) {
 }
 ```
 
-这里的 to 就是上面讲的参数 to，`to.matched`是一个对象数组，里面有 to 指向路由的相关信息，例如：path，name，meta等等。
- 我们用该数组调用some()方法根据返回值`true`或者`false`来进行判断，所以我们要在router.js路由配置文件中为我们需要验证登录判断跳转的路由添加一个字段来作为判断条件
+这里的 to 就是上面讲的参数 to，`to.matched`是一个对象数组，里面有 to 指向路由的相关信息，例如：path，name，meta 等等。
+ 我们用该数组调用 some() 方法根据返回值`true`或者`false`来进行判断，所以我们要在 router.js 路由配置文件中为我们需要验证登录判断跳转的路由添加一个字段来作为判断条件
 
 ```
 {
@@ -602,15 +602,15 @@ meta:{auth:true}  //我们自己添加的字段
 }
 ```
 
-由于给路由添加了`meta:{auth:true}`，所以我们的`to.matched.some(record => record.meta.auth)`会返回`true`，这时我们就可以做登录判断了，我的项目是通过把token存入到`localstorage`来进行判断的， getToken()是我封装的一个获取`localstorage`方法。
+由于给路由添加了`meta:{auth:true}`，所以我们的`to.matched.some(record => record.meta.auth)`会返回`true`，这时我们就可以做登录判断了，我的项目是通过把 token 存入到`localstorage`来进行判断的，getToken() 是我封装的一个获取`localstorage`方法。
 
 ```javascript
 if (getToken() !== null) {
-    next() //若token不为null，则进行路由跳转
+    next() //若 token 不为 null，则进行路由跳转
 }
 ```
 
-如果没有token，我们下一步继续进行判断，也就是最终目的，进行路由拦截，跳转到登录页
+如果没有 token，我们下一步继续进行判断，也就是最终目的，进行路由拦截，跳转到登录页
 
 ```javascript
 else {
@@ -622,11 +622,11 @@ else {
 
 但是这时候我们会遇到新的问题，打开控制台会发现路由会无限的循环并最终崩溃，这是什么原因呢？仔细阅读上文红色加粗，我们可以理解为
 
-- `next()` 表示路由成功，直接进入to路由，不会再次调用router.beforeEach()
-- `next({ path: '/login', });` 表示路由拦截成功，重定向至login，会再次调用router.beforeEach()
+- `next()` 表示路由成功，直接进入 to 路由，不会再次调用 router.beforeEach()
+- `next({ path: '/login', });` 表示路由拦截成功，重定向至 login，会再次调用 router.beforeEach()
 
-也就是说beforeEach()必须调用next()，否则就会出现无限循环
- next() 和 next('xxx') 是不一样的，区别就是前者不会再次调用router.beforeEach()，后者会。而由于我们没有token，所以在重新调用router.beforeEach()后，会再次进入到
+也就是说 beforeEach() 必须调用 next()，否则就会出现无限循环
+ next() 和 next('xxx') 是不一样的，区别就是前者不会再次调用 router.beforeEach()，后者会。而由于我们没有 token，所以在重新调用 router.beforeEach() 后，会再次进入到
 
 ```javascript
 else {
@@ -645,14 +645,14 @@ if (to.name === 'login') {
 }
 ```
 
-如果我们to的定向路由`name == 'login'`,则执行`next();`并return终止代码运行。
+如果我们 to 的定向路由`name == 'login'`,则执行`next();`并 return 终止代码运行。
 
-以上就是通过router.beforEach方法进行路由拦截了，我们不仅仅可以只做登录判断，通过这个方法可以实现很多需求，只要是有关路由跳转的都可以，在下只是抛砖引玉，如果有哪里不对的地方或者有更好的方法可以直接在评论告诉我，非常感谢。
+以上就是通过 router.beforEach 方法进行路由拦截了，我们不仅仅可以只做登录判断，通过这个方法可以实现很多需求，只要是有关路由跳转的都可以，在下只是抛砖引玉，如果有哪里不对的地方或者有更好的方法可以直接在评论告诉我，非常感谢。
 
 **tips**
 
 2018.7.2
- 由于实际项目中很多界面都需要进行token的验证拦截,因此考虑后决定把过滤的方法设置在axios拦截器的`http response 拦截器`里,根据后端返回的错误码来判断是token过期或者无效之类的错误来进行跳转到登录页面。
+ 由于实际项目中很多界面都需要进行 token 的验证拦截，因此考虑后决定把过滤的方法设置在 axios 拦截器的`http response 拦截器`里，根据后端返回的错误码来判断是 token 过期或者无效之类的错误来进行跳转到登录页面。
 
 
 

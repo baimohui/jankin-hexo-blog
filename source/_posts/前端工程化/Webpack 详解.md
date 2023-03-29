@@ -9,11 +9,11 @@ tags:
 
 
 
-前端开发已经模块化，它改进了代码库的封装和结构。打包工具已经成为了一个项目必不可少的部分，如今这儿有几种可能的选择，例如webpack，grunt，gulp等。webpack因为他的功能和扩展性在过去的几年中，受到非常大的欢迎。
+前端开发已经模块化，它改进了代码库的封装和结构。打包工具已经成为了一个项目必不可少的部分，如今这儿有几种可能的选择，例如 webpack，grunt，gulp 等。webpack 因为他的功能和扩展性在过去的几年中，受到非常大的欢迎。
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106173720.png" alt="image-20210325155353232" style="zoom:67%;" />
 
-**不像大多数的模块打包机，webpack 是把项目当作一个整体，通过一个给定的的主文件，webpack 将从这个文件开始找到你的项目的所有依赖文件，使用 loaders 处理它们，最后打包成一个或多个浏览器可识别的js文件。**<!-- more -->
+**不像大多数的模块打包机，webpack 是把项目当作一个整体，通过一个给定的的主文件，webpack 将从这个文件开始找到你的项目的所有依赖文件，使用 loaders 处理它们，最后打包成一个或多个浏览器可识别的 js 文件。**<!-- more -->
 
 ## （一）webpack 作用
 
@@ -39,7 +39,7 @@ tags:
 而每个模块间的依赖关系，则依赖于`AST`抽象语法树。每个模块文件在通过`Loader`解析完成之后，会通过`acorn`库生成模块代码的`AST`语法树，通过语法树就可以分析这个模块是否还有依赖的模块，进而继续循环执行下一个模块的编译解析。最终`Webpack`打包出来的`bundle`文件是一个`IIFE`（立即调用函数表达式）的执行函数。
 
 ```javascript
-// webpack 5 打包的bundle文件内容
+// webpack 5 打包的 bundle 文件内容
 
 (() => { // webpackBootstrap
     var __webpack_modules__ = ({
@@ -88,12 +88,12 @@ tags:
 
 ```js
 {
-  "version" : 3,                          // Source Map版本
+  "version" : 3,                          // Source Map 版本
   "file": "out.js",                       // 输出文件（可选）
   "sourceRoot": "",                       // 源文件根目录（可选）
   "sources": ["foo.js", "bar.js"],        // 源文件列表
   "sourcesContent": [null, null],         // 源内容列表（可选，和源文件列表顺序一致）
-  "names": ["src", "maps", "are", "fun"], // mappings使用的符号名称列表
+  "names": ["src", "maps", "are", "fun"], // mappings 使用的符号名称列表
   "mappings": "A,AAAB;;ABCDE;"            // 带有编码映射数据的字符串
 }
 ```
@@ -102,22 +102,22 @@ tags:
 
 - 生成文件中的一行的每个组用“;”分隔；
 - 每一段用“,”分隔；
-- 每个段由1、4或5个可变长度字段组成；
+- 每个段由 1、4 或 5 个可变长度字段组成；
 
-有了这份映射文件，我们只需要在压缩代码的最末端加上这句注释，即可让sourceMap生效：
+有了这份映射文件，我们只需要在压缩代码的最末端加上这句注释，即可让 sourceMap 生效：
 
 ```js
 //# sourceURL=/path/to/file.js.map
 ```
 
-有了这段注释后，浏览器就会通过`sourceURL`去获取这份映射文件，通过解释器解析后，实现源码和混淆代码之间的映射。因此sourceMap其实也是一项需要浏览器支持的技术。
+有了这段注释后，浏览器就会通过`sourceURL`去获取这份映射文件，通过解释器解析后，实现源码和混淆代码之间的映射。因此 sourceMap 其实也是一项需要浏览器支持的技术。
 
-如果我们仔细查看webpack打包出来的bundle文件，就可以发现在默认的`development`开发模式下，每个`_webpack_modules__`文件模块的代码最末端，都会加上`//# sourceURL=webpack://file-path?`，从而实现对sourceMap的支持。
-
-
+如果我们仔细查看 webpack 打包出来的 bundle 文件，就可以发现在默认的`development`开发模式下，每个`_webpack_modules__`文件模块的代码最末端，都会加上`//# sourceURL=webpack://file-path?`，从而实现对 sourceMap 的支持。
 
 
-## （四）webpack使用
+
+
+## （四）webpack 使用
 
 ### install
 
@@ -127,12 +127,12 @@ tags:
 npm install webpack webpack-dev-server --save-dev
 ```
 
-webpack是我们需要的模块打包机，webpack-dev-server用来创建本地服务器，监听你的代码修改，并自动刷新修改后的结果。这些是webpack.config.js文件中有关devServer的配置。
+webpack 是我们需要的模块打包机，webpack-dev-server 用来创建本地服务器，监听你的代码修改，并自动刷新修改后的结果。这些是 webpack.config.js 文件中有关 devServer 的配置。
 
 - `contentBase`：为文件提供本地服务器
-- `port`：监听端口，默认8080
-- `inline`：设置为true，源文件发生改变自动刷新页面
-- `historyApiFallback`：依赖HTML5 history API，如果设置为true，所有的页面跳转指向index.html
+- `port`：监听端口，默认 8080
+- `inline`：设置为 true，源文件发生改变自动刷新页面
+- `historyApiFallback`：依赖 HTML5 history API，如果设置为 true，所有的页面跳转指向 index.html
 
 ```javascript
 // exemple
@@ -151,7 +151,7 @@ devServer:{
 }
 ```
 
-在使用webpack命令的时候，他将接受webpack的配置文件，除非我们使用其他的操作
+在使用 webpack 命令的时候，他将接受 webpack 的配置文件，除非我们使用其他的操作
 
 ### Entry
 
@@ -163,7 +163,7 @@ var baseConfig = {
 }
 ```
 
-当我们需要多个入口文件的时候，可以把entry写成一个对象
+当我们需要多个入口文件的时候，可以把 entry 写成一个对象
 
 ```javascript
 var baseConfig = {
@@ -202,7 +202,7 @@ output: {
 }
 ```
 
-如今这么少的配置，就能够让你运行一个服务器并在本地使用命令npm start或者npm run build来打包我们的代码进行发布
+如今这么少的配置，就能够让你运行一个服务器并在本地使用命令 npm start 或者 npm run build 来打包我们的代码进行发布
 
 ### Loader
 
@@ -214,10 +214,10 @@ output: {
 
 2. 转换这些文件，从而使其能够被添加到依赖图中
 
-loader 是 webpack 最重要的部分之一，通过使用不同的 Loader，我们能够调用外部的脚本或者工具，实现对不同格式文件的处理， loader 需要在 webpack.config.js 里边单独用 module 进行配置，配置如下：
+loader 是 webpack 最重要的部分之一，通过使用不同的 Loader，我们能够调用外部的脚本或者工具，实现对不同格式文件的处理，loader 需要在 webpack.config.js 里边单独用 module 进行配置，配置如下：
 
 - test：匹配所处理文件的扩展名的正则表达式（必须）
-- loader： loader的名称（必须）
+- loader：loader 的名称（必须）
 - include/exclude：手动添加处理的文件，屏蔽不需要处理的文件（可选）
 - query：为 loaders 提供额外的设置选项
 
@@ -230,7 +230,7 @@ var baseConfig = {
             {
                 test: /*匹配文件后缀名的正则*/,
                 use: [
-                	loader: /*loader名字*/,
+                	loader: /*loader 名字*/,
                 	query: /*额外配置*/
                 ]
     		}
@@ -239,7 +239,7 @@ var baseConfig = {
 }
 ```
 
-要使 loader 工作，我们需要一个正则表达式来标识我们要修改的文件，然后用一个数组表示我们即将使用的 Loader，当然我们需要的loader 需要通过 npm 进行安装。例如我们需要解析 less 的文件，那么 webpack.config.js 的配置如下：
+要使 loader 工作，我们需要一个正则表达式来标识我们要修改的文件，然后用一个数组表示我们即将使用的 Loader，当然我们需要的 loader 需要通过 npm 进行安装。例如我们需要解析 less 的文件，那么 webpack.config.js 的配置如下：
 
 ```javascript
 var baseConfig = {
@@ -272,11 +272,11 @@ var baseConfig = {
 ```
 
 
-- babel-loader：让下一代的js文件转换成现代浏览器能够支持的JS文件。
+- babel-loader：让下一代的 js 文件转换成现代浏览器能够支持的 JS 文件。
 - babel：有些复杂，所以大多数都会新建一个`.babelrc` 进行配置
-- css-loader，style-loader：两个建议配合使用，用来解析css文件，能够解释`@import url()`，如果需要解析less就在后面加一个less-loader
-- file-loader：生成的文件名就是文件内容的MD5哈希值，并会保留所引用资源的原始扩展名
-- url-loader：功能类似 file-loader，但是文件大小低于指定的限制时，可以返回一个`DataURL`。事实上，在使用less,scss,stylus时，npm会提示你差什么插件，差什么你安上就行了
+- css-loader，style-loader：两个建议配合使用，用来解析 css 文件，能够解释`@import url()`，如果需要解析 less 就在后面加一个 less-loader
+- file-loader：生成的文件名就是文件内容的 MD5 哈希值，并会保留所引用资源的原始扩展名
+- url-loader：功能类似 file-loader，但是文件大小低于指定的限制时，可以返回一个`DataURL`。事实上，在使用 less,scss,stylus 时，npm 会提示你差什么插件，差什么你安上就行了
 
 ### Plugins
 
@@ -287,12 +287,12 @@ var baseConfig = {
 `Webpack`的事件机制基于`webpack`自己实现的一套`Tapable`事件流方案（[github](https://github.com/webpack/tapable)）
 
 ```js
-// Tapable的简单使用
+// Tapable 的简单使用
 const { SyncHook } = require("tapable");
 
 class Car {
     constructor() {
-        // 在this.hooks中定义所有的钩子事件
+        // 在 this.hooks 中定义所有的钩子事件
         this.hooks = {
             accelerate: new SyncHook(["newSpeed"]),
             brake: new SyncHook(),
@@ -304,7 +304,7 @@ class Car {
 }
 
 const myCar = new Car();
-// 通过调用tap方法即可增加一个消费者，订阅对应的钩子事件了
+// 通过调用 tap 方法即可增加一个消费者，订阅对应的钩子事件了
 myCar.hooks.brake.tap("WarningLampPlugin", () => warningLamp.on());
 ```
 
@@ -330,7 +330,7 @@ class MyPlugin {
 }
 ```
 
-**loaders 负责的是处理源文件的如 css、jsx，一次处理一个文件。而 plugins 并不是直接操作单个文件，**它直接对整个构建过程起作用。下面列举了一些我们常用的plugins和对应用法。
+**loaders 负责的是处理源文件的如 css、jsx，一次处理一个文件。而 plugins 并不是直接操作单个文件，**它直接对整个构建过程起作用。下面列举了一些我们常用的 plugins 和对应用法。
 
 **`ExtractTextWebpackPlugin`**:
 
@@ -361,7 +361,7 @@ var baseConfig = {
 
 **`HtmlWebpackPlugin`**
 
-依据一个简单的index.html模版，生成一个自动引用你打包后的 js 文件的新 index.html
+依据一个简单的 index.html 模版，生成一个自动引用你打包后的 js 文件的新 index.html
 
 ```javascript
 var HTMLWebpackPlugin = require('html-webpack-plugin')
@@ -375,9 +375,9 @@ var baseConfig = {
 
 **`HotModuleReplacementPlugin`**
 
-它允许在修改组件代码时自动进行刷新，以实时预览修改后的结果。注意不要在生产环境中使用HMR（一般情况分为开发环境，测试环境，生产环境）。用法为： `new webpack.HotModuleReplacementPlugin()`
+它允许在修改组件代码时自动进行刷新，以实时预览修改后的结果。注意不要在生产环境中使用 HMR（一般情况分为开发环境，测试环境，生产环境）。用法为： `new webpack.HotModuleReplacementPlugin()`
 
-**webpack.config.js的全部内容示例**
+**webpack.config.js 的全部内容示例**
 
 ```javascript
 const webpack = require("webpack")
@@ -430,7 +430,7 @@ var baseConfig = {
 }
 ```
 
-然后还需要修改script命令：
+然后还需要修改 script 命令：
 
 ```
 "scripts": {
@@ -452,7 +452,7 @@ if (process.env.NODE_ENV === 'development') {
 
 下面介绍几个插件用来优化代码
 
-- `OccurrenceOrderPlugin`：为组件分配 ID，通过这个插件webpack可以分析和优先考虑使用最多的模块，然后为它们分配最小的 ID
+- `OccurrenceOrderPlugin`：为组件分配 ID，通过这个插件 webpack 可以分析和优先考虑使用最多的模块，然后为它们分配最小的 ID
 - `UglifyJsPlugin`：压缩代码
 
 下面是他们的使用方法
@@ -465,11 +465,11 @@ var baseConfig = {
 }
 ```
 
-然后在我们使用npm run build会发现代码是压缩的。
+然后在我们使用 npm run build 会发现代码是压缩的。
 
-## （五）编写自定义Plugin
+## （五）编写自定义 Plugin
 
-插件是 webpack 的支柱功能。`webpack` 自身也是构建于，你在 `webpack` 配置中用到的相同的插件系统之上！插件目的在于解决 `loader` 无法实现的其他事。 要想写好插件就要知道`Webpack`中的两个比较核心的概念`compiler`、`compilation`、`tapable`。在[webpack 编译流程]()已经都要记录。 `Webpack` 通过 `Plugin` 机制让其更加灵活，以适应各种应用场景。 在 `Webpack` 运行的生命周期中会广播出许多事件，`Plugin` 可以监听这些事件，在合适的时机通过 `Webpack` 提供的 `API` 改变输出结果。
+插件是 webpack 的支柱功能。`webpack` 自身也是构建于，你在 `webpack` 配置中用到的相同的插件系统之上！插件目的在于解决 `loader` 无法实现的其他事。要想写好插件就要知道`Webpack`中的两个比较核心的概念`compiler`、`compilation`、`tapable`。在[webpack 编译流程]()已经都要记录。 `Webpack` 通过 `Plugin` 机制让其更加灵活，以适应各种应用场景。在 `Webpack` 运行的生命周期中会广播出许多事件，`Plugin` 可以监听这些事件，在合适的时机通过 `Webpack` 提供的 `API` 改变输出结果。
 
 ### 实现一个 plugin
 
@@ -529,7 +529,7 @@ module.exports = {
     ]
   },
   plugins: [
-    // 提取css插件
+    // 提取 css 插件
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
@@ -545,7 +545,7 @@ module.exports = {
 
 - `webpack` 启动后，在读取配置的过程中会先执行 `new WebpackCleanupPlugin()` ，初始化一个 `WebpackCleanupPlugin` 。
 - 在初始化 `compiler` 对象后，再调用 `WebpackCleanupPlugin.apply(compiler)` 给插件实例传入 `compiler` 对象。
-- 插件实例在获取到 `compiler` 对象后，就可以通过 `compiler.plugin`(事件名称, 回调函数) 监听到 `Webpack` 广播出来的事件。
+- 插件实例在获取到 `compiler` 对象后，就可以通过 `compiler.plugin`(事件名称，回调函数) 监听到 `Webpack` 广播出来的事件。
 - 并且可以通过 `compiler` 对象去操作 `webpack`。
 
 **Compiler、Compilation**
@@ -574,7 +574,7 @@ module.exports = {
 
 - 获取`output`路径，也就是出口路径一般为`dist`
 - 绑定钩子事件 `compiler.plugin('done', (stats) => {})`
-- 编译文件，与原来文件对比，删除未匹配文件 （同时可以 options 设置要忽略的文件）
+- 编译文件，与原来文件对比，删除未匹配文件（同时可以 options 设置要忽略的文件）
 
 代码实现如下
 
@@ -605,7 +605,7 @@ class WebpackCleanupPlugin {
     this.options = options;
   }
   apply(compiler) {
-    // 获取output路径
+    // 获取 output 路径
     const outputPath = compiler.options.output.path;
     // 绑定钩子事件
     compiler.plugin("done", stats => {

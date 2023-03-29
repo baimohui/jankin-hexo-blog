@@ -1,5 +1,5 @@
 ---
-title: 解决pm2 command not found问题
+title: 解决 pm2 command not found 问题
 categories: 
 - Nginx
 tags:

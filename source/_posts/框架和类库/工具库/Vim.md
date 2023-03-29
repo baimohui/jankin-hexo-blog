@@ -119,7 +119,7 @@ tags:
 ```
 
 ### keybindings.json
-ctrl + shift + p: 打开键盘快捷方式（JSON）
+ctrl + shift + p / F1: 打开键盘快捷方式（JSON）
 ```json
 // 将键绑定放在此文件中以覆盖默认值
 [

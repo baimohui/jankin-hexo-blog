@@ -1,5 +1,5 @@
 ---
-title: Vue子组件修改父组件传递的props值属性
+title: Vue 子组件修改父组件传递的 props 值属性
 categories:
 - Vue
 tags:
@@ -12,7 +12,7 @@ tags:
 - watch
 ---
 
-需求：父组件通过 props 传递给子组件 `caseList` 数组，这里需要遍历该数组来展示每个 case 元素的一些属性，其中就包括创建时间 create_time 和图片地址 cover。但父组件传过来的 create_time 是一个时间戳，我们希望时间以年-月-日的形式来呈现。而 cover 的格式是 `["http:/xxxxxx.jpg"]`，直接赋给图片 src 是不行的。所以子组件需要想办法修改 props 值。
+需求：父组件通过 props 传递给子组件 `caseList` 数组，这里需要遍历该数组来展示每个 case 元素的一些属性，其中就包括创建时间 create_time 和图片地址 cover。但父组件传过来的 create_time 是一个时间戳，我们希望时间以年 - 月 - 日的形式来呈现。而 cover 的格式是 `["http:/xxxxxx.jpg"]`，直接赋给图片 src 是不行的。所以子组件需要想办法修改 props 值。
 
 <!-- more -->
 
@@ -46,7 +46,7 @@ tags:
             newCaseList() {
                 return this.caseList.map((item) => {
                     item.cover = item.cover.slice(2, -2);
-                    item.create_time = this.format(item.create_time); //通过自定义format函数转换时间戳格式
+                    item.create_time = this.format(item.create_time); //通过自定义 format 函数转换时间戳格式
                     return item;
                 });
             },
@@ -59,7 +59,7 @@ tags:
 
 ### 二、使用监听属性
 
-在子组件data中拷贝一份，注意引用类型需要深拷贝，根据需求可以watch监听。
+在子组件 data 中拷贝一份，注意引用类型需要深拷贝，根据需求可以 watch 监听。
 
 ```javascript
 data() {
