@@ -13,12 +13,12 @@ tags:
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106173720.png" alt="image-20210325155353232" style="zoom:67%;" />
 
-**不像大多数的模块打包机，webpack 是把项目当作一个整体，通过一个给定的的主文件，webpack 将从这个文件开始找到你的项目的所有依赖文件，使用 loaders 处理它们，最后打包成一个或多个浏览器可识别的 js 文件。**<!-- more -->
+**不像大多数的模块打包机，webpack 将项目当作一个整体，通过一个给定的的主文件，从这个文件开始找到项目的所有依赖文件，使用 loaders 处理它们，最后打包成一个或多个浏览器可识别的 js 文件。**<!-- more -->
 
 ## （一）webpack 作用
 
-- **模块打包**。可以将不同模块的文件打包整合在一起，并且保证它们之间的引用正确，执行有序。利用打包我们就可以在开发的时候根据我们自己的业务自由划分文件模块，保证项目结构的清晰和可读性。
-- **编译兼容**。在前端发展早期阶段，手写一堆浏览器兼容代码一直是令前端工程师头皮发麻的事情，而在今天这个问题被大大弱化了，通过`webpack`的`Loader`机制，不仅仅可以帮助我们对代码做`polyfill`，还可以编译转换诸如`.less, .vue, .jsx`这类在浏览器无法识别的格式文件，让我们在开发的时候可以使用新特性和新语法做开发，提高开发效率。
+- **模块打包**。可以将不同模块的文件打包整合在一起，并且保证它们之间的引用正确，执行有序。利用打包就可以在开发时根据自身业务自由划分文件模块，保证项目结构的清晰和可读性。
+- **编译兼容**。在前端发展早期阶段，手写一堆浏览器兼容代码一直是令前端工程师头皮发麻的事情，而在今天这个问题被大大弱化了，通过`webpack`的`Loader`机制，不仅仅可以对代码做`polyfill`，还可以编译转换诸如`.less, .vue, .jsx`这类在浏览器无法识别的格式文件，让我们在开发时可以使用新特性和新语法，提高开发效率。
 - **能力扩展**。通过`webpack`的`Plugin`机制，我们在实现模块化打包和编译兼容的基础上，可以进一步实现诸如按需加载，代码压缩等一系列功能，帮助我们进一步提高自动化程度，工程效率以及打包输出的质量。
 
 ## （二）模块打包运行原理
@@ -151,15 +151,13 @@ devServer:{
 }
 ```
 
-在使用 webpack 命令的时候，他将接受 webpack 的配置文件，除非我们使用其他的操作
-
 ### Entry
 
 entry: 用来写入口文件，它将是整个依赖关系的根
 
 ```javascript
 var baseConfig = {
-	entry: './src/index.js'
+  entry: './src/index.js'
 }
 ```
 
@@ -167,13 +165,11 @@ var baseConfig = {
 
 ```javascript
 var baseConfig = {
-	entry: {
-    	main: './src/index.js'
-    }
+  entry: {
+    main: './src/index.js'
+  }
 }
 ```
-
-我建议使用后面一种方法，因为他的规模会随你的项目增大而变得繁琐
 
 ### Output
 
@@ -202,7 +198,7 @@ output: {
 }
 ```
 
-如今这么少的配置，就能够让你运行一个服务器并在本地使用命令 npm start 或者 npm run build 来打包我们的代码进行发布
+如今这么少的配置，就能够运行一个服务器并在本地使用命令 npm start 或者 npm run build 来打包项目代码进行发布。
 
 ### Loader
 
@@ -222,20 +218,20 @@ loader 是 webpack 最重要的部分之一，通过使用不同的 Loader，我
 - query：为 loaders 提供额外的设置选项
 
 ```javascript
-// exemple 
+// example 
 var baseConfig = {
-    // ...
-    module: {
-        rules: [
-            {
-                test: /*匹配文件后缀名的正则*/,
-                use: [
-                	loader: /*loader 名字*/,
-                	query: /*额外配置*/
-                ]
-    		}
-    	]
-	}
+  // ...
+  module: {
+    rules: [
+      {
+        test: /*匹配文件后缀名的正则*/,
+        use: [
+          loader: /*loader 名字*/,
+          query: /*额外配置*/
+        ]
+      }
+    ]
+  }
 }
 ```
 
@@ -243,31 +239,31 @@ var baseConfig = {
 
 ```javascript
 var baseConfig = {
-    entry: {
-        main: './src/index.js'
-    },
-    output: {
-        filename: '[name].js',
-        path: path.resolve('./build')
-    },
-    devServer: {
-        contentBase: './src',
-        historyApiFallBack: true,
-        inline: true
-    },
-    module: {
-        rules: [
-            {
-                test: /\.less$/,
-                use: [
-                    {loader: 'style-loader'},
-                    {loader: 'css-loader'},
-                    {loader: 'less-loader'}
-                ],
-                exclude: /node_modules/
-            }
-        ]
-    }
+  entry: {
+    main: './src/index.js'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve('./build')
+  },
+  devServer: {
+    contentBase: './src',
+    historyApiFallBack: true,
+    inline: true
+  },
+  module: {
+    rules: [
+      {
+        test: /\.less$/,
+        use: [
+            {loader: 'style-loader'},
+            {loader: 'css-loader'},
+            {loader: 'less-loader'}
+        ],
+        exclude: /node_modules/
+      }
+    ]
+  }
 }
 ```
 
@@ -330,7 +326,7 @@ class MyPlugin {
 }
 ```
 
-**loaders 负责的是处理源文件的如 css、jsx，一次处理一个文件。而 plugins 并不是直接操作单个文件，**它直接对整个构建过程起作用。下面列举了一些我们常用的 plugins 和对应用法。
+loaders 负责处理源文件，如 css、jsx，一次处理一个文件。而 plugins 并不是直接操作单个文件，它直接对整个构建过程起作用。下面列举了一些常用的 plugins 和对应用法。
 
 **`ExtractTextWebpackPlugin`**:
 
@@ -558,7 +554,7 @@ module.exports = {
 
 `Compilation`中包含的东西如下所示：
 
-![webpacl-plugin](https://user-gold-cdn.xitu.io/2019/9/5/16d003fa8e2cc44a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+![webpack-plugin](https://user-gold-cdn.xitu.io/2019/9/5/16d003fa8e2cc44a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
 > **Compiler 和 Compilation 的区别在于**：`Compiler` 代表了整个 `Webpack` 从启动到关闭的生命周期，而 `Compilation` 只是代表了一次新的编译。
 

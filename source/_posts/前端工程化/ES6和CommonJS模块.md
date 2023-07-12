@@ -1,11 +1,16 @@
 ---
-title: 关于 import 和 require 的一点理解
+title: ES6 Module 和 CommonJS 模块的区别
 categories: 
 - 模块打包
 tags:
 - ES6
 - CommonJS
 ---
+
+ES6 Module 和 CommonJS 模块的区别：
+* CommonJS 模块是同步加载的，而 ES6 模块是异步加载的。
+* CommonJS 模块是运行时加载，而 ES6 模块是编译时加载。
+* CommonJS 模块输出的是一个值的拷贝，而 ES6 模块输出的是一个值的引用。
 
 require 用于读取并执行 js 文件，并返回该模块的 exports 对象，若无指定模块，会报错。Node 使用 CommonJS 模块规范，CommonJS 规范加载模块是**同步**的，只有加载完成，才能执行后续操作。
 

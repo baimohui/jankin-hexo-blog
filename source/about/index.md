@@ -31,7 +31,7 @@ comments: false
 |  19   |                 [The Phantom of the Opera]()                 | [Gaston Leroux](https://www.goodreads.com/author/show/9057.Gaston_Leroux) |   107 k    |      /2022      |  3.96  |
 |  20   |                                                              |                                                              |            |                 |        |
 
-​																																											*Progress：2, 035k* 
+​																																											*Progress: 2, 035k* 
 
 
 

@@ -9,7 +9,7 @@ tags:
 
 之前学习前端中，对 meta 标签的了解仅仅只是这一句。
 
-```routeros
+```html
 <meta charset="UTF-8">
 ```
 
@@ -22,8 +22,6 @@ tags:
 > The <meta> tag provides metadata about the HTML document. Metadata will not be displayed on the page, but will be machine parsable.
 
 不难看出，其中的关键是 metadata，中文名叫元数据，是用于描述数据的数据。它不会显示在页面上，但是机器却可以识别。这么一来 meta 标签的作用方式就很好理解了。
-
-### 用处
 
 > Meta elements are typically used to specify page description, keywords, author of the document, last modified, and other metadata.
 
@@ -41,49 +39,62 @@ meta 标签共有两个属性，分别是 http-equiv 属性和 name 属性。
 name 属性主要用于描述网页，比如网页的关键词，叙述等。与之对应的属性值为 content，content 中的内容是对 name 填入类型的具体描述，便于搜索引擎抓取。
 meta 标签中 name 属性语法格式是：
 
-```routeros
+```html
 <meta name="参数" content="具体的描述">。 
 ```
 
 其中 name 属性共有以下几种参数。**(A-C 为常用属性)**
 
-#### A. keywords(关键字)
+#### A. seo 相关
+* keywords：用于告诉搜索引擎，你网页的关键字
 
-说明：用于告诉搜索引擎，你网页的关键字。
-举例：
-
-```routeros
+```html
 <meta name="keywords" content="Lxxyx,博客，文科生，前端">
 ```
 
-#### B. description(网站内容的描述)
+* description：用于告诉搜索引擎网站的主要内容。
 
-说明：用于告诉搜索引擎，你网站的主要内容。
-举例：
-
-```routeros
+```html
 <meta name="description" content="文科生，热爱前端与编程。目前大二，这是我的前端博客"> 
 ```
 
-#### C. viewport(移动端的窗口)
+* title
+```html
+<meta name="title" property="og:title" content="如诗的青春——我的大学">
+```
+
+* image：封面
+```html
+<meta name="image" property="og:image" content="https://test-cdn.regoo.com/article/8f2d79c0-23ef-4630-8946-cf56d57c384d.png">
+```
+
+* 分享到推特
+```html
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="如诗的青春——我的大学">
+<meta name="twitter:image" content="https://test-cdn.regoo.com/article/8f2d79c0-23ef-4630-8946-cf56d57c384d.png">
+<meta name="twitter:description" content="大学是我们每一个人梦想的殿堂，为了来到这个殿堂我们经历了风风雨雨。">
+```
+
+#### B. viewport(移动端的窗口)
 
 说明：这个概念较为复杂，具体的 https://juejin.cn/post/6844903721697017864。
 这个属性常用于设计移动端网页。在用 bootstrap,AmazeUI 等框架时候都有用过 viewport。
 
 举例（常用范例）：
 
-```routeros
+```html
 <meta name="viewport" content="width=device-width, initial-scale=1">
 ```
 
-#### D. robots(定义搜索引擎爬虫的索引方式)
+#### C. robots(定义搜索引擎爬虫的索引方式)
 
 说明：robots 用来告诉爬虫哪些页面需要索引，哪些页面不需要索引。
 content 的参数有 all,none,index,noindex,follow,nofollow。默认是 all。
 
 举例：
 
-```routeros
+```html
 <meta name="robots" content="none"> 
 ```
 
@@ -96,25 +107,25 @@ content 的参数有 all,none,index,noindex,follow,nofollow。默认是 all。
 5.index : 搜索引擎索引此网页。
 6.follow : 搜索引擎继续通过此网页的链接索引搜索其它的网页。
 
-#### E. author(作者)
+#### D. author(作者)
 
 说明：用于标注网页作者
 举例：
 
-```routeros
+```html
 <meta name="author" content="Lxxyx,841380530@qq.com"> 
 ```
 
-#### F. generator(网页制作软件)
+#### E. generator(网页制作软件)
 
 说明：用于标明网页是什么软件做的
 举例：(不知道能不能这样写)：
 
-```routeros
+```html
 <meta name="generator" content="Sublime Text3"> 
 ```
 
-#### G. copyright(版权)
+#### F. copyright(版权)
 
 说明：用于标注版权信息
 举例：
@@ -123,7 +134,7 @@ content 的参数有 all,none,index,noindex,follow,nofollow。默认是 all。
 <meta name="copyright" content="Lxxyx"> //代表该网站为Lxxyx个人版权所有。
 ```
 
-#### H. revisit-after(搜索引擎爬虫重访时间)
+#### G. revisit-after(搜索引擎爬虫重访时间)
 
 说明：如果页面不是经常更新，为了减轻搜索引擎爬虫对服务器带来的压力，可以设置一个爬虫的重访时间。如果重访时间过短，爬虫将按它们定义的默认时间来访问。
 举例：
@@ -132,7 +143,7 @@ content 的参数有 all,none,index,noindex,follow,nofollow。默认是 all。
 <meta name="revisit-after" content="7 days" >
 ```
 
-#### I. renderer(双核浏览器渲染方式)
+#### H. renderer(双核浏览器渲染方式)
 
 说明：renderer 是为双核浏览器准备的，用于指定双核浏览器默认以何种方式渲染页面。比如说 360 浏览器。
 举例：
@@ -145,20 +156,11 @@ content 的参数有 all,none,index,noindex,follow,nofollow。默认是 all。
 
 ### 2. http-equiv 属性
 
-介绍之前，先说个小插曲。看文档和博客关于 http-equiv 的介绍时，有这么一句。
-
-> http-equiv 顾名思义，相当于 http 的文件头作用。
-
-一开始看到这句话的时候，我是迷糊的。因为我看各类技术名词，都会习惯性的去记住它的英文全称。equiv 的全称是"equivalent"，意思是相等，相当于。然后我脑子里出现了大大的迷惑：“HTTP 相等？”
-
-后来还准备去 Segmentfault 提问来着。结果在写问题的时候，突然反应出 equivalent 还有相当于的意思。意思就是相当于 http 的作用。至于文件头是哪儿出来的，估计是从其作用来分析的。我认为顾名思义并不能得出"相当于 http 的文件头作用"这个论断。
-
-这个我所认为的 http-equiv 意思的简介。
-`相当于HTTP的作用，比如说定义些HTTP参数啥的。`
+http-equiv 顾名思义，相当于 http 的文件头作用。
 
 meta 标签中 http-equiv 属性语法格式是：
 
-```routeros
+```html
 <meta http-equiv="参数" content="具体的描述">
 ```
 
@@ -191,11 +193,9 @@ meta 标签中 http-equiv 属性语法格式是：
 说明：指导浏览器如何缓存某个响应以及缓存多长时间。这一段内容我在网上找了很久，但都没有找到满意的。
 最后终于在 Google Developers 中发现了我想要的答案。
 
-> ![cache 简介](http://7xoxxe.com1.z0.glb.clouddn.com/cache.png)
-
 举例：
 
-```routeros
+```html
 <meta http-equiv="cache-control" content="no-cache">
 ```
 

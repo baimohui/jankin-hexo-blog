@@ -10,11 +10,13 @@ tags:
 
 ### 1. MVVM 是什么
 
-MVVM 模式，顾名思义即 Model-View-ViewModel 模式。它萌芽于 2005 年微软推出的基于 Windows 的用户界面框架 WPF，前端最早的 MVVM 框架 knockout 在 2010 年发布。 <!-- more -->
+MVVM（Model-View-ViewModel）是一种软件架构模式，它可以将图形用户界面（GUI）的开发（视图）与业务逻辑或后端逻辑（模型）的开发分离，使视图不依赖于任何特定的后端逻辑。这种模式的核心思想是将视图与模型分离，以便在不影响视图的情况下修改模型。在 MVVM 中，视图和模型之间的通信是通过一个称为“绑定”的机制实现的。绑定机制允许视图自动更新，而无需编写大量的代码来处理这些更新。
 
-- **Model 层**：对应数据层的域模型，它主要做域模型的同步。通过 Ajax/fetch 等 API 完成客户端和服务端业务 Model 的同步。在层间关系里，它主要用于抽象出 ViewModel 中视图的 Model。 
-- **View 层**：作为视图模板存在，在 MVVM 里，整个 View 是⼀个动态模板。除了定义结构、布局外，它展示的是 ViewModel 层的数据和状态。View 层不负责处理状态，View 层做的是数据绑定的声明、指令的声明、事件绑定的声明。
-- **ViewModel 层**：把 View 需要的层数据暴露，并对 View 层的数据绑定声明、指令声明、事件绑定声明负责，也就是处理 View 层的具体业务逻辑。ViewModel 底层会做好绑定属性的监听。当 ViewModel 中数据变化，View 层会得到更新；而当 View 中声明了数据的双向绑定（通常是表单元素），框架也会监听 View 层（表单）值的变化。⼀旦值变化，View 层绑定的 ViewModel 中的数据也会得到自动更新。
+你可以将 MVVM 看作是 MVC（Model-View-Controller）模式的变体，其中控制器被视图模型（ViewModel）替换。在 MVC 中，控制器负责处理用户输入并更新模型和视图。在 MVVM 中，ViewModel 负责处理用户输入并更新模型和视图。它萌芽于 2005 年微软推出的基于 Windows 的用户界面框架 WPF，前端最早的 MVVM 框架 knockout 在 2010 年发布。 <!-- more -->
+
+- **Model 层（模型）**：对应数据层的域模型，它主要做域模型的同步。通过 Ajax/fetch 等 API 完成客户端和服务端业务 Model 的同步。在层间关系里，它主要用于抽象出 ViewModel 中视图的 Model。 
+- **View 层（视图）**：作为视图模板存在，在 MVVM 里，整个 View 是⼀个动态模板。除了定义结构、布局外，它展示的是 ViewModel 层的数据和状态。View 层不负责处理状态，View 层做的是数据绑定的声明、指令的声明、事件绑定的声明。
+- **ViewModel 层（视图模型）**：把 View 需要的层数据暴露，并对 View 层的数据绑定声明、指令声明、事件绑定声明负责，也就是处理 View 层的具体业务逻辑。ViewModel 底层会做好绑定属性的监听。当 ViewModel 中数据变化，View 层会得到更新；而当 View 中声明了数据的双向绑定（通常是表单元素），框架也会监听 View 层（表单）值的变化。⼀旦值变化，View 层绑定的 ViewModel 中的数据也会得到自动更新。
 
 <img src="https://cdn.jsdelivr.net/gh/baimohui/FigureBed/img/20211106174612.png" alt="image-20210326141639536" style="zoom: 67%;" />
 
