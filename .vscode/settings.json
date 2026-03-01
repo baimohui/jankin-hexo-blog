@@ -1,0 +1,9 @@
+{
+  "i18n-mage.i18nFeatures.framework": "none",
+  "i18n-mage.workspace.languagePath": "themes/next/languages",
+  "i18n-mage.writeRules.indentType": "space",
+  "i18n-mage.writeRules.indentSize": 2,
+  "i18n-mage.writeRules.quoteStyleForKey": "none",
+  "i18n-mage.writeRules.quoteStyleForValue": "double",
+  "i18n-mage.writeRules.languageStructure": "nested"
+}
