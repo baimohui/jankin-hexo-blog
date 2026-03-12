@@ -5,5 +5,17 @@
   "i18n-mage.writeRules.indentSize": 2,
   "i18n-mage.writeRules.quoteStyleForKey": "none",
   "i18n-mage.writeRules.quoteStyleForValue": "double",
-  "i18n-mage.writeRules.languageStructure": "nested"
+  "i18n-mage.writeRules.languageStructure": "nested",
+  "i18n-mage.analysis.fileExtensions": [
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".mjs",
+    ".cjs",
+    ".vue",
+    ".html",
+    ".njk"
+  ],
+  "i18n-mage.writeRules.keyStyle": "snake_case"
 }
