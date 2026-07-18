@@ -1,4 +1,4 @@
----
+﻿---
 title: Preact 介绍与 React 差异对比
 categories: 
 - React
@@ -11,6 +11,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "Preact 是什么？它和 React 的核心区别是什么？"
 
 Preact 是 React 的**轻量级替代品**，体积仅约 3KB（React + ReactDOM 约 40KB）。它实现了 React 的核心 API：JSX、组件、props/state、hooks（useState/useEffect/useRef 等），对大多数应用兼容度超过 95%。核心区别在于**内部实现更加精简**：去掉合成事件系统（SyntheticEvent，直接使用原生事件）、简化 diff 算法（不用完整 Fiber 架构，用递归同步 diff）、不实现 Suspense/Profiler 等边缘功能。通过 `preact/compat` 模块可以达到近乎 100% 的 React API 兼容（增加约 2KB），可以直接使用 React 生态库（如 Ant Design、React Router）。

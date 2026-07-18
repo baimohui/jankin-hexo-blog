@@ -1,4 +1,4 @@
----
+﻿---
 title: 部署与运维入门 — Docker / CI-CD / Nginx
 categories: 
 - 后端
@@ -12,6 +12,7 @@ tags:
 
 ## 从开发到上线
 
+<!-- more -->
 作为前端，你平时开发时 `npm run dev` 就完事了，但上线部署到服务器需要理解全链路：
 
 ```text

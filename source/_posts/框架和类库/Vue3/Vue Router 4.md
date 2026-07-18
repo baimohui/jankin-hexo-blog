@@ -1,4 +1,4 @@
----
+﻿---
 title: Vue Router 4 路由
 categories: 
 - Vue
@@ -10,6 +10,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "Vue Router 4 相比 Vue Router 3 有哪些主要变化？"
 
 创建方式从 `new VueRouter()` 变为 `createRouter({ history: createWebHistory() })`。全面拥抱 Composition API，提供 `useRouter` 和 `useRoute` 组合式函数。导航守卫中 `next()` 变为可选（Vue Router 3 中必须调用 next，不调用就卡住；Vue Router 4 中不 return 或 return undefined 表示放行）。移除了 `<transition>` + `<keep-alive>` 的旧嵌套用法，改用 `<router-view v-slot>` 更灵活。TypeScript 支持大幅增强，路由配置和 RouteRecord 都有完整类型推断。

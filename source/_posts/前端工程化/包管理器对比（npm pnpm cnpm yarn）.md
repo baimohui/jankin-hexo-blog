@@ -1,4 +1,4 @@
----
+﻿---
 title: 包管理器对比 — npm、pnpm、cnpm、yarn
 categories: 
 - 前端工程化
@@ -12,6 +12,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### 常见问法
 1. "npm、yarn、pnpm 各自的核心区别是什么？pnpm 为什么快？"
 2. "npm install 的流程是怎样的？package-lock.json 的作用是什么？"

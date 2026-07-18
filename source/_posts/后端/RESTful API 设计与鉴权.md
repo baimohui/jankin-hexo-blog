@@ -1,4 +1,4 @@
----
+﻿---
 title: RESTful API 设计与鉴权机制
 categories: 
 - 后端
@@ -12,6 +12,7 @@ tags:
 
 ## RESTful API 设计规范（前端视角）
 
+<!-- more -->
 RESTful 是前后端约定接口的最主流方式。作为前端，理解它比后端更重要——因为你是 API 的调用方。
 
 ### 核心概念

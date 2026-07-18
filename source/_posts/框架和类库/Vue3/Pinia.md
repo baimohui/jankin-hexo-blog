@@ -1,4 +1,4 @@
----
+﻿---
 title: Pinia 状态管理
 categories: 
 - Vue
@@ -11,6 +11,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "Pinia 和 Vuex 有什么核心区别？为什么官方用 Pinia 替代 Vuex？"
 
 Pinia 相比 Vuex 做了三个核心简化：① **去掉了 mutations**——Vuex 中修改 state 必须经过 mutation（同步）+ action（异步），Pinia 直接在 actions 中修改 state（这本来也是大部分开发者的实际做法）；② **模块化无需嵌套**——Vuex 用 modules 组织模块（有命名空间 namespace 的麻烦），Pinia 每个 store 独立的 `defineStore`，天然模块化；③ **完整的 TypeScript 支持**——无需额外类型声明就能获得完整类型推断。Pinia 也完全支持 Composition API（setup store 写法类似 composable）。体积仅约 1KB（Vuex 约 10KB）。Vue 官方已在 2022 年正式推荐 Pinia 替代 Vuex。

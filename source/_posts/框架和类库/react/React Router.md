@@ -1,4 +1,4 @@
----
+﻿---
 title: React Router 6 路由
 categories: 
 - React
@@ -10,6 +10,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "React Router 6 相比 React Router 5 有哪些主要变化？"
 
 核心变化是 **API 全面升级**：`<Switch>` 改为 `<Routes>`（自动匹配最佳路由）；`component={X}` 改为 `element={<X />}`；`useHistory()` 改为 `useNavigate()`；路由参数从 `props.match.params` 改为 `useParams()` hook。V6.4+ 引入了基于数据路由的 API——`createBrowserRouter` + `RouterProvider`，支持 `loader`（路由组件渲染前自动执行数据预加载）和 `action`（表单提交处理），类似 Next.js 的约定式数据加载。此外，嵌套路由通过 `<Outlet>` 组件渲染子路由，不再需要手动嵌套 Route 组件。

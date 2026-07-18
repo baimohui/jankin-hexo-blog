@@ -1,4 +1,4 @@
----
+﻿---
 title: Reflect 详解
 categories:
 - JavaScript
@@ -11,6 +11,7 @@ tags:
 
 # Reflect 详解
 
+<!-- more -->
 ## 【面试速答版】
 
 ### Q1: Reflect 是什么？它和 Object / Function 上的方法有什么区别？

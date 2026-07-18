@@ -1,4 +1,4 @@
----
+﻿---
 title: React 渲染机制与性能优化 — Fiber、diff、reconciliation
 categories: 
 - React
@@ -12,6 +12,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "React 的 reconciliation 过程是怎样的？Fiber 是什么？解决了什么问题？"
 
 Reconciliation 是 React **比较新旧 Virtual DOM 树**的过程。React 16 之前的 Stack Reconciler 是**同步递归**的——一旦开始渲染，必须遍历完整棵组件树才能停止。这导致大更新阻塞主线程，用户无法点击、输入、滚动。**Fiber** 是 React 16 引入的新协调引擎，把渲染拆分为可中断的小任务（Fiber Node），每个节点执行完后检查是否有更高优先级的任务（如用户输入）。Fiber 通过链表遍历替代递归，实现了**可中断渲染**、**优先级调度**和**错误边界**。渲染分为两个阶段：**Render 阶段**（可中断，对比新旧 VNode 生成 effect list）和 **Commit 阶段**（不可中断，把 effect list 应用到真实 DOM）。

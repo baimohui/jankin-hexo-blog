@@ -1,4 +1,4 @@
----
+﻿---
 title: Node.js 与全栈基础（Express / Koa）
 categories: 
 - 后端
@@ -11,6 +11,7 @@ tags:
 
 ## 为什么 Node.js 是前端转后端的最佳入口
 
+<!-- more -->
 - **语言一致**：JavaScript/TypeScript 前后端通用
 - **NPM 生态**：前端熟悉的包管理，后端也有 Express/Koa/Prisma
 - **事件循环模型**：前端理解的事件队列，Node.js 后端也是同一个

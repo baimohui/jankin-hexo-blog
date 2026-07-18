@@ -1,4 +1,4 @@
----
+﻿---
 title: esbuild 详解
 date: 2026-07-15 10:00:00
 categories:
@@ -13,6 +13,7 @@ tags:
 
 # esbuild 详解
 
+<!-- more -->
 ## 【面试速答版】
 
 ### Q1: esbuild 是什么？它为什么这么快？

@@ -1,4 +1,4 @@
----
+﻿---
 title: React 组件通信与状态管理 — props、Context、Redux/Zustand
 categories: 
 - React
@@ -12,6 +12,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "React 组件之间如何通信？"
 
 分三种关系。**父子通信**：父传子用 props，子传父用回调——父组件传一个函数给子组件，子组件调用它来通知父组件。如果需要跨多层传递，可以用**组合（children）**避免逐层传。**跨层级通信**：用 Context——`createContext` + `Provider` + `useContext`，跳过中间层直接把数据注入到底层组件，适合主题、语言等低频全局数据。**任意组件通信**：用全局状态管理库——中小项目推荐 Zustand（极简、按需订阅），大型项目推荐 Redux Toolkit（强约束、DevTools 完善）。总结：父子用 props + 回调，跨层级用 Context，全局用 Zustand/Redux。

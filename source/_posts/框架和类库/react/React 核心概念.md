@@ -1,4 +1,4 @@
----
+﻿---
 title: React 核心概念 — JSX、组件化、生命周期、Virtual DOM
 categories: 
 - React
@@ -12,6 +12,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "JSX 的本质是什么？为什么 React 要引入 JSX？"
 
 JSX 是 JavaScript 的**语法扩展**，本质是 `React.createElement(type, props, ...children)` 的语法糖。Babel 在编译时将 JSX 转换成普通的 JS 函数调用。举个例：`<div className="box">Hello</div>` 编译后变成 `React.createElement('div', { className: 'box' }, 'Hello')`。React 引入 JSX 而不是像 Vue 那样用模板，是因为 JSX 本身就是 JS——你可以在 JSX 中用变量、表达式、循环、条件判断，不需要学一套额外的模板语法（如 v-if/v-for）。对于 JavaScript 开发者来说更自然，也更灵活。

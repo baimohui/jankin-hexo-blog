@@ -1,4 +1,4 @@
----
+﻿---
 title: React Hooks 详解 — useState、useEffect、自定义 hooks
 categories: 
 - React
@@ -13,6 +13,7 @@ tags:
 
 ## 【面试速答版】
 
+<!-- more -->
 ### Q1: "useState 和 useReducer 的适用场景分别是什么？setState 是同步还是异步？"
 
 `useState` 适用于**独立、简单的状态**（如数字、字符串、布尔值），`useReducer` 适用于**多个关联的状态或复杂更新逻辑**（如表单字段校验、购物车多步骤操作）。`useState` 的 setter 在 React 18 的 `createRoot` 下**默认都是异步的**（自动批处理），无论写在事件处理、setTimeout 还是 Promise 中，多个 setState 会被合并到一次渲染。`useReducer` 的 dispatch 也是同样的批处理规则。需要强制同步读取最新值时，用 `useEffect` 或在事件处理中通过 `e.target` 等原生方式获取。
