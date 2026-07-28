@@ -52,11 +52,230 @@ Vite 的构建系统在生产环境中使用 Rollup 进行打包，具有以下�
 
 ### 2.3 插件系统
 
-Vite 的插件系统设计灵活，具有以下特点：
+Vite 的插件系统基于 Rollup 插件接口设计并进行了扩展。插件本质是一个**包含若干钩子（hooks）函数的对象**，在构建流程的不同阶段被 Vite 调用，从而实现代码转换、路径解析、注入内容等功能。
 
-- **丰富的插件生态**：Vite 拥有活跃的插件生态系统，可以通过插件扩展其功能。目前已有数百个官方和社区插件，涵盖了各种功能需求。
-- **与 Rollup 插件兼容**：Vite 的插件系统设计与 Rollup 兼容，许多 Rollup 插件可以直接在 Vite 中使用。这大大扩展了 Vite 的功能范围。
-- **插件钩子**：Vite 提供了丰富的插件钩子，允许插件在构建过程的不同阶段执行自定义逻辑。
+#### 插件 API 架构
+
+```text
+Vite 插件 = Rollup 插件能力 + Vite 特有扩展
+  │
+  ├── Rollup 通用钩子
+  │   ├── resolveId       —— 解析模块路径
+  │   ├── load            —— 加载模块内容
+  │   ├── transform       —— 转换模块代码（核心）
+  │   ├── moduleParsed    —— 模块解析完成
+  │   └── buildEnd        —— 构建结束
+  │
+  ├── Rollup 输出阶段钩子
+  │   ├── renderStart     —— 输出开始
+  │   ├── banner / footer —— 添加文件头尾
+  │   └── generateBundle  —— 生成产物
+  │
+  └── Vite 独有钩子
+      ├── config          —— 修改 Vite 配置
+      ├── configResolved  —— 配置确认后
+      ├── configureServer —— 配置开发服务器
+      ├── handleHotUpdate —— 自定义 HMR 处理
+      └── transformIndexHtml —— 转换 index.html
+```
+
+#### 常用钩子详解
+
+**`config`**：在 Vite 配置解析前调用，可用于修改配置：
+
+```js
+function myPlugin() {
+  return {
+    name: 'my-plugin',
+    config(config, { command, mode }) {
+      // command: 'serve'（开发）| 'build'（生产）
+      // mode: 'development' | 'production'
+      return {
+        resolve: {
+          alias: { '@': '/src' },
+        },
+      };
+    },
+  };
+}
+```
+
+**`transform`**：最常用的钩子，拦截并转换模块代码：
+
+```js
+function stripConsolePlugin() {
+  return {
+    name: 'strip-console',
+    transform(code, id) {
+      // id = 模块绝对路径
+      if (id.endsWith('.vue') || id.includes('node_modules')) return;
+      return {
+        code: code.replace(/console\.(log|warn|error)\([^)]*\);?\n?/g, ''),
+        map: null,  // sourcemap
+      };
+    },
+  };
+}
+```
+
+**`configureServer`**：配置开发服务器，添加自定义中间件：
+
+```js
+function mockApiPlugin() {
+  return {
+    name: 'mock-api',
+    configureServer(server) {
+      // server.middlewares 是 Connect 实例
+      server.middlewares.use('/api/mock', (req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ data: 'mock' }));
+      });
+    },
+  };
+}
+```
+
+**`handleHotUpdate`**：自定义 HMR 行为，决定文件变化后如何更新：
+
+```js
+function hmrCustomPlugin() {
+  return {
+    name: 'hmr-custom',
+    handleHotUpdate({ file, server }) {
+      // file = 变更的文件路径
+      if (file.endsWith('.scss')) {
+        // 只更新相关模块，不完全重载页面
+        const module = server.moduleGraph.getModuleById(file);
+        if (module) server.reloadModule(module);
+        return [];
+      }
+    },
+  };
+}
+```
+
+**`transformIndexHtml`**：修改 `index.html` 输出内容：
+
+```js
+function injectAnalyticsPlugin() {
+  return {
+    name: 'inject-analytics',
+    transformIndexHtml(html) {
+      return html.replace('</head>', `
+        <script>console.log('analytics injected');</script>
+      </head>`);
+    },
+  };
+}
+```
+
+#### 插件执行顺序
+
+Vite 插件的执行顺序由两个因素决定：
+
+```text
+1. 插件在 plugins 数组中的位置
+   plugins: [pluginA, pluginB]  →  A 先于 B
+
+2. 钩子的类型
+   ├── 通用（resolveId/transform 等）：按顺序执行
+   ├── 输出（generateBundle 等）：逆序执行
+   └── 并行（模块解析相关）：不保证顺序
+```
+
+所有插件中，**别名和路径解析类**插件应尽量靠前，**代码转换类**插件按依赖关系排列。
+
+#### 编写自定义插件——完整示例
+
+```js
+// plugins/vite-plugin-svg-inline.js
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+export default function svgInlinePlugin(options = {}) {
+  const { prefix = '?inline' } = options;
+
+  return {
+    name: 'svg-inline',                     // 插件名（必须，用于错误提示）
+    enforce: 'pre',                          // 执行阶段：pre | 默认 | post
+
+    // 解析阶段：标记带 ?inline 的 svg 请求
+    resolveId(source, importer) {
+      if (source.endsWith(prefix)) {
+        // 返回一个特殊 ID，跳过后续解析
+        return '\0' + source.replace(prefix, '') + '.inline.svg';
+      }
+    },
+
+    // 加载阶段：读取 svg 文件内容
+    load(id) {
+      if (id.endsWith('.inline.svg')) {
+        const filePath = id.replace('\0', '').replace('.inline.svg', '.svg');
+        const svg = readFileSync(resolve(filePath), 'utf-8');
+        // 导出为 JS 字符串，让 import 语法合法
+        return `export default ${JSON.stringify(svg)};`;
+      }
+    },
+
+    // 开发服务器中间件
+    configureServer(server) {
+      server.middlewares.use('/__svg_list', (req, res) => {
+        res.end('SVG List Endpoint');
+      });
+    },
+  };
+}
+```
+
+```js
+// vite.config.js —— 使用自定义插件
+import svgInline from './plugins/vite-plugin-svg-inline';
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    svgInline({ prefix: '?raw' }),
+  ],
+});
+
+// 在代码中使用
+import icon from './icons/check.svg?raw';  // 直接得到 SVG 字符串
+```
+
+#### 常用官方与社区插件
+
+| 插件 | 用途 | 安装量 |
+|------|------|--------|
+| `@vitejs/plugin-vue` | Vue SFC 支持 | 官方 |
+| `@vitejs/plugin-react` | React JSX + Fast Refresh | 官方 |
+| `@vitejs/plugin-legacy` | 传统浏览器兼容（自动 Babel + polyfill） | 官方 |
+| `vite-plugin-pwa` | PWA + Service Worker | 高频 |
+| `vite-plugin-svg-icons` | SVG 雪碧图 | 高频 |
+| `vite-plugin-inspect` | 查看插件中间产物 | 调试 |
+| `vite-plugin-mock` | 本地 mock 数据 | 高频 |
+| `unplugin-auto-import` | 自动导入 API（ref、computed 等） | 高频 |
+| `unplugin-vue-components` | 自动按需引入组件库 | 高频 |
+
+#### Rollup 插件兼容性
+
+Vite 的插件系统与 Rollup 兼容，大多数 Rollup 插件可直接在 Vite 中使用：
+
+```js
+import rollupPluginCommonjs from '@rollup/plugin-commonjs';
+import rollupPluginReplace from '@rollup/plugin-replace';
+
+export default defineConfig({
+  plugins: [
+    // Rollup 插件直接使用
+    rollupPluginCommonjs(),
+    rollupPluginReplace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+  ],
+});
+```
+
+**注意**：部分 Rollup 插件使用了 `emitFile`、`resolveFileUrl` 等 Vite 不支持的输出钩子，使用前需测试验证。
 
 ### 2.4 类型支持
 
