@@ -219,6 +219,217 @@ A：双端 diff 用 4 个指针（oldStart、oldEnd、newStart、newEnd）两两
 
 A：每个组件实例是一个独立的 patch 单元。父组件的 Block Tree 只收集父组件模板中直接定义的动态节点，不穿透到子组件内部。子组件内部的动态节点由子组件自己的 Block Tree 处理。所以 dynamicChildren 是"当前组件模板这一层"的动态节点，不是整个组件树的。
 
+## 七、Vapor Mode——无虚拟 DOM 的未来
+
+### 7.1 什么是 Vapor Mode
+
+Vapor Mode 是 Vue 团队正在开发的一种**新的编译策略**（非默认，是可选的编译目标）。它的核心思路是：**在编译阶段将模板直接编译为原生 DOM 操作，彻底移除虚拟 DOM**。
+
+```text
+传统 Vue 3 运行流程：
+  模板 → 编译为 render 函数 → 执行 render → 生成 VNode → diff → patch DOM
+
+Vapor Mode 运行流程：
+  模板 → 编译为 DOM 操作函数 → 直接调用 DOM API → 更新真实 DOM
+```
+
+### 7.2 为什么需要 Vapor Mode
+
+虚拟 DOM 虽然有 diff 性能优势，但也有不可忽视的开销：
+
+```text
+虚拟 DOM 的开销：
+├── 运行时要额外创建 VNode 对象（内存分配 + GC 压力）
+├── 即使只更新一个属性，也要执行整棵树的 diff 遍历
+├── 对于纯静态内容，每次都创建相同的 VNode 再直接 patch
+└── Block Tree 虽能跳过静态节点，但 VNode 仍然存在
+```
+
+Vapor Mode 直接跳过 VNode 创建和 diff 阶段，将模板编译为等价的命令式 DOM 操作：
+
+```vue
+<!-- 模板 -->
+<div class="card">
+  <p>{{ title }}</p>
+  <p>静态描述</p>
+</div>
+```
+
+```js
+// Virtual DOM 模式编译产物
+function render(ctx, cache) {
+  return (_openBlock(), _createBlock('div', { class: 'card' }, [
+    _createVNode('p', null, ctx.title, 1 /* TEXT */),
+    _createVNode('p', null, '静态描述'),
+  ]))
+}
+
+// Vapor Mode 编译产物（示意）
+function render(ctx) {
+  const div = document.createElement('div');
+  div.className = 'card';
+
+  const p1 = document.createElement('p');
+  effect(() => { p1.textContent = ctx.title; });  // 只有这一行是动态的
+
+  const p2 = document.createElement('p');
+  p2.textContent = '静态描述';  // 只创建一次，永不更新
+
+  div.append(p1, p2);
+  return div;
+}
+```
+
+### 7.3 Virtual DOM vs Vapor Mode 对比
+
+| 维度 | Virtual DOM 模式 | Vapor Mode |
+|------|-----------------|------------|
+| VNode 创建 | 每次更新都创建 | 无 |
+| diff 开销 | 有（即使 Block Tree 也有） | 无 |
+| 内存占用 | 高（VNode 对象 + 响应式系统） | 低（仅响应式系统） |
+| 首屏渲染 | 需要执行 render + diff | 直接创建 DOM |
+| 更新粒度 | 组件级别（组件内比完后应用更新） | 变量级别（精确到具体 DOM 属性） |
+| 动态内容 > 静态内容 | 优秀 | 优秀 |
+| 静态内容 > 动态内容 | 有浪费（VNode 创建） | 极优（静态内容只执行一次） |
+| 缓存友好性 | 低（每次都创建新对象） | 高 |
+| bundle 大小 | 完整 Vue 运行时（含 diff 算法） | 小（不含 virtual DOM 相关代码） |
+
+### 7.4 Vapor Mode 的更新粒度
+
+Vapor Mode 中每个动态绑定被直接编译为响应式副作用：
+
+```vue
+<template>
+  <p :style="{ color: theme }">{{ msg }}</p>
+</template>
+
+<!-- Vapor Mode 编译产物（伪代码） -->
+import { effect, template, setText, setStyle } from 'vue/vapor';
+
+const tpl = template('<p></p>');  // 只创建一次模板
+
+function render(ctx) {
+  const el = tpl();  // 克隆模板
+
+  effect(() => { setText(el, ctx.msg); });     // msg 变化只更新 textContent
+  effect(() => { setStyle(el, 'color', ctx.theme); });  // theme 变化只更新 color
+
+  return el;
+}
+```
+
+当 `msg` 变化时，只有 `setText(el, ctx.msg)` 被执行——**不需要 diff，不需要知道其他节点**。
+
+### 7.5 Vapor Mode 的局限性
+
+```text
+├── 不是 "drop-in" 替代
+│   Vapor Mode 是一个编译目标，不是默认的运行时策略。
+│   目前的规划是：Vapor Mode 编译的组件可以和 Virtual DOM 组件混用。
+
+├── 不直接支持部分功能
+│   ├── `<Teleport>`、`<Suspense>` 等内置组件（需额外运行时支持）
+│   ├── `<KeepAlive>`（依赖 VNode 缓存）
+│   ├── functional components 的某些用法
+│   └── 动态组件 `<component :is="...">`（需要运行时解析）
+
+├── 编译产物更大
+│   每个模板被直接编译为 DOM 操作代码，会有些体积膨胀。
+│   但不需要包含运行时 diff 算法，gzip 后整体可能更小。
+
+├── 与库 / 插件的兼容性
+│   第三方组件库可能依赖 VNode 或 render 函数的某些特性，
+│   需要适配才能完全在 Vapor Mode 下工作。
+```
+
+### 7.6 混合模式（Vapor + Virtual DOM）
+
+Vue 团队的计划不是"二选一"，而是**两者共存**：
+
+```text
+┌─────────────────────────────────────────┐
+│            应用容器                      │
+│  ┌──────────────────────────────────┐   │
+│  │ Virtual DOM 组件（兼容层）        │   │
+│  │ （使用现有组件库、插件）           │   │
+│  └────────────┬─────────────────────┘   │
+│               │ props / slots           │
+│  ┌────────────▼─────────────────────┐   │
+│  │ Vapor 组件（高性能内层）           │   │
+│  │ （核心业务、大列表、频繁更新）      │   │
+│  └──────────────────────────────────┘   │
+│                                         │
+│  两者通过统一的跨组件通信机制互操作      │
+└─────────────────────────────────────────┘
+```
+
+在同一个应用中，大部分组件继续使用 Virtual DOM 模式（兼容性优先），对性能敏感的组件（大列表、频繁更新的图表、动画）使用 Vapor Mode。
+
+### 7.7 当前状态与启用方式
+
+```text
+Vue 3.4：Vapor Mode 进入实验阶段（RFC + 原型实现）
+Vue 3.5（预计）：可选的 Vapor Mode 编译器
+Vue 3.6+（预计）：稳定版 Vapor Mode
+
+启用方式（未来）：
+  // vite.config.ts
+  import { defineConfig } from 'vite';
+  import vue from '@vitejs/plugin-vue';
+
+  export default defineConfig({
+    plugins: [
+      vue({
+        vapor: true,  // 整个应用开启 Vapor Mode
+        // 或按文件粒度
+      }),
+    ],
+  });
+
+  // 或按组件选择（通过文件扩展名或配置）
+  // Button.vapor.vue → 使用 Vapor Mode
+  // Button.vue → 使用 Virtual DOM
+```
+
+### 7.8 面试题
+
+#### Q1: Vapor Mode 和虚拟 DOM 哪个更快
+
+```text
+不能简单说哪个"更快"，取决于场景：
+
+静态内容多 → Vapor Mode 快（静态只创建一次，无需 VNode）
+动态更新频繁 → 两者接近（Vapor Mode 精确到变量，Virtual DOM 到组件）
+首次渲染 → Vapor Mode 快（跳过 VNode 创建 + diff）
+内存敏感（移动端）→ Vapor Mode 优（无 VNode 对象开销）
+
+Vapor Mode 消除的是虚拟 DOM 的"固定开销"（VNode 分配 + diff），
+在静态内容越多的场景下优势越明显。
+```
+
+#### Q2: Vapor Mode 会替代虚拟 DOM 吗
+
+```text
+不会完全替代。Vapor Mode 和 Virtual DOM 是互补关系：
+
+Vapor Mode 适合：新项目、性能敏感组件、移动端、静态内容多的页面
+Virtual DOM 适合：需要兼容第三方库、使用 Teleport/Suspense/KeepAlive、
+                动态组件、依赖 render 函数的场景
+
+Vue 团队的目标是让两者无缝共存。
+```
+
+#### Q3: Vapor Mode 对现有项目的影响
+
+```text
+对现有项目基本无影响——Vapor Mode 是一个可选的编译目标，
+默认还是 Virtual DOM 模式。升级 Vue 版本不会自动切换。
+
+如果需要使用 Vapor Mode，需要对依赖库进行兼容性检查
+（element-plus / ant-design-vue 等是否适配）。
+```
+
 **关联知识点索引**
 - `模板编译与渲染.md` — PatchFlag、Block Tree 的编译过程
 - `响应式原理.md` — 响应式变化如何触发 patch
+- Vue 官方 Vapor Mode RFC

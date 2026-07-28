@@ -1,159 +1,315 @@
 ﻿---
-title: RESTful API 设计与鉴权机制
+title: RESTful API 设计与鉴权
 categories: 
 - 后端
 tags:
 - API
 - RESTful
-- JWT
-- OAuth
+- HTTP
+- 设计规范
 - 鉴权
 ---
 
-## RESTful API 设计规范（前端视角）
+## 一、什么是 REST
 
-<!-- more -->
-RESTful 是前后端约定接口的最主流方式。作为前端，理解它比后端更重要——因为你是 API 的调用方。
+REST（Representational State Transfer）是一种架构风格，而不是协议或标准。它定义了一组约束，遵循这些约束设计的 API 被称为 RESTful API。<!--more-->
 
-### 核心概念
+### REST 的 6 个约束
 
-```text
-资源（Resource）：用户、文章、订单 ...
-URL 表示资源：/api/users、/api/articles
-HTTP 动词表示操作：
-  GET    /api/users       → 获取用户列表
-  GET    /api/users/:id   → 获取单个用户
-  POST   /api/users       → 新增用户
-  PUT    /api/users/:id   → 全量更新用户
-  PATCH  /api/users/:id   → 部分更新用户
-  DELETE /api/users/:id   → 删除用户
-```
+| 约束 | 含义 | 体现 |
+|------|------|------|
+| **无状态** | 服务端不保存客户端状态，每个请求包含所有必要信息 | Token 随请求发送 |
+| **客户端-服务端** | 关注点分离 | 前端只关心 UI，后端只关心数据 |
+| **可缓存** | 响应应隐式或显式标记为可缓存或不可缓存 | `Cache-Control` 头 |
+| **统一接口** | 资源通过 URL 标识，通过表述操作资源，自描述消息 | HTTP 动词 + 状态码 |
+| **分层系统** | 客户端不知道是否直接连接端服务器 | 中间可加代理、网关 |
+| **按需代码（可选）** | 服务器可临时扩展客户端功能 | JS 脚本下发（极少用） |
 
-### 前端友好的 API 设计要点
+## 二、资源命名规范
 
-```javascript
-// 好的 API：
-GET /api/articles?page=1&pageSize=20
-→ { "data": [...], "total": 100, "page": 1, "pageSize": 20 }
-
-// 好的错误响应：
-POST /api/users  → 400
-{ "code": "VALIDATION_ERROR", "message": "邮箱格式不正确", "field": "email" }
-```
-
-### HTTP 状态码速查（前端最常遇到的）
-
-| 状态码 | 含义 | 前端处理 |
-|---|---|---|
-| 200 | 成功 | 正常渲染 |
-| 201 | 创建成功 | POST 请求成功 |
-| 204 | 无内容 | DELETE 成功，无响应体 |
-| 301/302 | 重定向 | 浏览器自动跳转或手动处理 |
-| 400 | 参数错误 | 提示用户检查输入 |
-| 401 | 未登录/Token 过期 | 跳转登录页 + 刷新 Token |
-| 403 | 无权限 | 提示无权访问 |
-| 404 | 资源不存在 | 提示 404 或展示空状态 |
-| 409 | 冲突 | 如重复提交、版本冲突 |
-| 422 | 参数校验失败 | 后端返回具体字段错误 |
-| 429 | 请求太频繁 | 限流，等待后重试 |
-| 500 | 服务器错误 | 友好提示 + 错误上报 |
-
-## 常见鉴权方式
-
-作为前端，你每天都在和鉴权打交道——登录、Token 过期、刷新 Token。
-
-### Session-Cookie
+### 核心原则：名词复数
 
 ```text
-用户登录 → 服务器创建 Session → 返回 Cookie（含 sessionId）
-  ↓
-后续请求 → 浏览器自动带上 Cookie
-  ↓
-服务器对比 Session → 确认身份
+# 好的命名
+GET    /api/users
+GET    /api/users/:id
+POST   /api/users
+PUT    /api/users/:id
+DELETE /api/users/:id
+
+# 关系的表示
+GET  /api/users/:id/orders         # 用户的订单列表
+GET  /api/orders/:id/items         # 订单的商品列表
+
+# 过滤、排序、分页（全部通过查询参数）
+GET /api/orders?status=pending&page=1&pageSize=20&sort=-createdAt
 ```
 
-**前端视角：** Cookie 是浏览器自动带的，前端不需要手动处理。但跨域时 Cookie 需要 `credentials: 'include'`。
-
-### JWT（JSON Web Token）— 目前最主流
+### 常见反模式
 
 ```text
-用户登录 → 服务器生成 JWT（签名加密）→ 返回给前端
-  ↓
-前端存到 localStorage / 请求头 Authorization: Bearer <token>
-  ↓
-后续请求 → 前端手动带 Token → 服务器验证签名
+❌ 动词在 URL 中：/api/getUsers、/api/deleteUser
+✅ 用 HTTP 动词表达：GET /api/users、DELETE /api/users/:id
+
+❌ 模糊的端点：/api/doSomething
+✅ 清晰的资源：/api/orders/:id/cancel（cancel 适合用 POST 动作）
+
+❌ 大小写混用：/api/GetUsers、/api/userOrders
+✅ 全小写 + 连字符：/api/order-items
+
+❌ 文件扩展名：/api/users.json、/api/users.xml
+✅ 通过 Accept 头协商：Accept: application/json
 ```
 
-**JWT 的结构：**
+### 动作（Action）的处理
+
+对于不适合 CRUD 的操作，用 POST 发送动作：
+
 ```text
-header.payload.signature
-↓          ↓       ↓
-算法类型   用户信息    签名（防篡改）
-{"alg":"HS256","typ":"JWT"}.{"id":1,"role":"admin","exp":1700000000}.xxxxx...
+POST /api/orders/:id/cancel     # 取消订单
+POST /api/orders/:id/refund     # 退款
+POST /api/users/:id/reset-password  # 重置密码
+
+# 或者将动作作为请求体字段
+POST /api/orders/:id/actions
+{ "action": "cancel", "reason": "..." }
 ```
 
-**前端注意事项：**
+## 三、请求与响应设计
 
-```javascript
-// 登录后存 Token
-const login = async (username, password) => {
-  const { token, refreshToken } = await api.login({ username, password })
-  localStorage.setItem('token', token)
-  localStorage.setItem('refreshToken', refreshToken)
+### 统一响应格式
+
+```json
+// 成功响应
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "id": 1,
+    "name": "Alice"
+  }
 }
 
-// Axios 拦截器统一带 Token 并处理过期
-api.interceptors.request.use(config => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-  return config
-})
-
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 401) {
-      // Token 过期 → 用 refreshToken 刷新
-      return refreshTokenAPI().then(({ token }) => {
-        localStorage.setItem('token', token)
-        error.config.headers.Authorization = `Bearer ${token}`
-        return api(error.config) // 重发原请求
-      }).catch(() => {
-        // 刷新也失败 → 跳登录
-        window.location.href = '/login'
-      })
-    }
-    return Promise.reject(error)
+// 列表响应（包含分页）
+{
+  "code": 0,
+  "data": [...],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "total": 100,
+    "totalPages": 5
   }
-)
+}
+
+// 错误响应
+{
+  "code": "VALIDATION_ERROR",
+  "message": "邮箱格式不正确",
+  "field": "email",
+  "details": "user@"
+}
 ```
 
-### OAuth 2.0（第三方登录）
+### 请求头约定
 
 ```text
-用户点击"微信登录"
-  ↓
-跳转微信授权页 → 用户确认
-  ↓
-回调到你的服务器 → 服务器拿 code 换 token
-  ↓
-服务器用 token 获取用户信息 → 创建/匹配账号 → 返回 JWT
+Content-Type: application/json          # 请求体格式
+Accept: application/json                # 期望的响应格式
+Authorization: Bearer <token>            # 鉴权
+X-Request-Id: uuid                      # 请求追踪 ID
+X-Tenant-Code: tenant-a                 # 租户标识（SaaS）
+Accept-Language: zh-CN                  # 国际化
+If-None-Match: "abc123"                 # 条件请求（ETag）
 ```
 
-**前端视角：** OAuth 流程中前端主要负责跳转和接收回调（处理 redirect_uri）。
+### HTTP 状态码使用
 
-## 鉴权模式对比
+```text
+2xx 成功
+├── 200 OK           GET / PUT / PATCH 成功
+├── 201 Created      POST 创建资源成功
+├── 202 Accepted     异步任务已接受
+├── 204 No Content   DELETE 成功（无响应体）
 
-| 模式 | 适用场景 | 前端复杂度 |
-|---|---|---|
-| Session-Cookie | 传统 Web 应用、SSR | 低（浏览器自动处理） |
-| JWT | SPA、移动端、跨服务鉴权 | 中（需手动管理 Token） |
-| OAuth 2.0 | 第三方登录、开放平台 | 中（处理跳转和回调） |
-| API Key | 服务间调用、SDK | 低（固定请求头） |
+3xx 重定向
+├── 301 Moved Permanently    资源路径永久变更
+├── 302 Found                临时重定向
+├── 304 Not Modified          缓存有效
 
-## 接口对接的常见问题
+4xx 客户端错误
+├── 400 Bad Request           参数错误/校验失败
+├── 401 Unauthorized          未登录/Token 过期
+├── 403 Forbidden             无权限（已登录但无权）
+├── 404 Not Found             资源不存在
+├── 409 Conflict              冲突（重复创建、版本冲突）
+├── 422 Unprocessable Entity  语义错误（如邮箱格式错）
+├── 429 Too Many Requests     限流
 
-1. **跨域 (CORS)**：后端需要配置 `Access-Control-Allow-Origin`，开发环境用 Vite proxy
-2. **Token 过期**：401 后自动刷新，并在刷新期间"挂起"其他请求，避免多个 401 同时刷
-3. **接口字段名风格**：后端 `snake_case` → 前端 `camelCase`，BFF 层转换或用 Axios transformResponse
-4. **接口版本**：`/api/v1/users`、`/api/v2/users`，前端按版本对接
-5. **数据一致性**：后端返回的数据可能变化（新增字段/删除字段），前端要做好兜底和类型检查
+5xx 服务端错误
+├── 500 Internal Server Error 服务器内部错误
+├── 502 Bad Gateway           网关错误
+├── 503 Service Unavailable   服务暂时不可用
+├── 504 Gateway Timeout       网关超时
+```
+
+### 前端处理状态码
+
+```ts
+// Axios 统一处理
+api.interceptors.response.use(
+  response => response.data,
+  error => {
+    const status = error.response?.status;
+    const data = error.response?.data;
+
+    switch (status) {
+      case 401:
+        // Token 过期 → 刷新或跳转登录
+        return refreshAndRetry(error);
+      case 403:
+        notification.warn('无权访问该资源');
+        break;
+      case 404:
+        // 展示空状态而非报错
+        return { code: 0, data: null };
+      case 422:
+        // 表单校验错误 → 回填到表单组件
+        form.setFields(toFieldErrors(data.details));
+        break;
+      case 429:
+        notification.warn('请求过于频繁，请稍后重试');
+        break;
+      default:
+        errorReport.capture(error);
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+## 四、API 版本管理
+
+```text
+方案 A：URL 路径版本（推荐）
+  /api/v1/users
+  /api/v2/users
+
+方案 B：请求头版本
+  Accept: application/vnd.example.v1+json
+
+方案 C：查询参数版本
+  /api/users?version=1
+
+最佳实践：
+  - V1 稳定后不修改已有字段，只新增
+  - 大版本使用 URL 路径方式（最直观）
+  - 新增字段不要改变已有字段的语义
+```
+
+```ts
+// 前端同时对接多个版本
+const API_V1 = '/api/v1';
+const API_V2 = '/api/v2';
+
+// 降级策略：优先用 V2，不支持则回退 V1
+async function getUsers() {
+  try {
+    return await api.get(`${API_V2}/users`);
+  } catch {
+    return await api.get(`${API_V1}/users`);
+  }
+}
+```
+
+## 五、安全设计
+
+### 常见安全措施
+
+```text
+├── HTTPS：所有 API 必须走 HTTPS
+├── 限流：按 IP/用户/Tenant 限制请求频率
+├── 输入校验：服务端做白名单校验，前端仅做体验校验
+├── 输出过滤：不返回敏感字段（密码、密钥）
+├── 幂等性：POST 支持幂等 Key 防止重复提交
+└── CORS：精确配置允许的来源，不开放给所有域名
+```
+
+### 防止重复提交
+
+```ts
+// 前端用 idempotencyKey
+async function createOrder(orderData) {
+  const idempotencyKey = crypto.randomUUID();
+
+  return fetch('/api/orders', {
+    method: 'POST',
+    headers: {
+      'Idempotency-Key': idempotencyKey,
+    },
+    body: JSON.stringify(orderData),
+  });
+}
+```
+
+## 六、REST 替代方案对比
+
+```text
+├── GraphQL
+│   优势：客户端精确控制返回字段，一次请求获取关联数据
+│   劣势：查询复杂度不可控，缓存比 REST 复杂
+│   适用：数据模型复杂、前端需要灵活查询的场景
+
+├── gRPC
+│   优势：基于 Protobuf，性能高，强类型
+│   劣势：浏览器支持有限，需 gRPC-Web 代理
+│   适用：微服务间通信、后端到后端
+
+├── WebSocket
+│   优势：全双工实时通信
+│   劣势：无请求-响应范式，无状态码
+│   适用：实时协作、推送通知
+└── REST
+    优势：简单直观、缓存友好、工具链成熟
+    适用：大多数 CRUD 类 Web API
+```
+
+## 七、面试题
+
+### Q1: PUT 和 PATCH 有什么区别
+
+```text
+PUT：全量替换整个资源。客户端传完整对象，缺失字段会被置空。
+PATCH：部分更新。客户端只传要修改的字段。
+
+示例：
+  PUT   /api/users/1  { name: "Alice", age: 25 }   必须传完整 user
+  PATCH /api/users/1  { name: "Alice" }             只传 name 即可
+```
+
+### Q2: RESTful API 对前端最重要的设计原则是什么
+
+```text
+1. 统一接口：一套接口规则适用于所有资源，前端可以封装通用的请求函数
+2. 无状态：每个请求独立，便于前端做重试和错误处理
+3. 可缓存：合理的缓存策略减少前端请求量
+4. 清晰的错误码：让前端能精确识别错误类型并给出友好提示
+```
+
+### Q3: 如何设计文件上传 API
+
+```text
+单文件：
+  POST /api/upload
+  Content-Type: multipart/form-data
+  → { url: "https://cdn.example.com/file.pdf" }
+
+分片上传：
+  POST /api/upload/init      → { uploadId: "xxx" }
+  POST /api/upload/part      → { uploadId, partNumber, body }
+  POST /api/upload/complete   → { uploadId } → { url: "..." }
+
+批量上传：
+  POST /api/upload/batch
+  → { files: [{ url: "..." }, { url: "..." }] }
+```
