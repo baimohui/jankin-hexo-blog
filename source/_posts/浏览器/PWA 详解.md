@@ -11,8 +11,6 @@ tags:
 - 消息推送
 ---
 
-<!-- more -->
-
 ## 目录
 
 1. [开篇：PWA 到底是啥？](#开篇pwa-到底是啥)
@@ -27,6 +25,8 @@ tags:
 10. [总结回顾](#总结回顾)
 
 ---
+
+<!-- more -->
 
 ## 开篇：PWA 到底是啥？
 
@@ -440,7 +440,7 @@ module.exports = {
             cacheName: 'static-resources',
             expiration: {
               maxEntries: 50,
-              maxAgeSeconds: 30 * 24 * 60 * 60, // 30天
+              maxAgeSeconds: 30 * 24 * 60 * 60, // 30 天
             },
           },
         },
@@ -451,7 +451,7 @@ module.exports = {
             cacheName: 'images',
             expiration: {
               maxEntries: 100,
-              maxAgeSeconds: 60 * 24 * 60 * 60, // 60天
+              maxAgeSeconds: 60 * 24 * 60 * 60, // 60 天
             },
           },
         },
@@ -463,7 +463,7 @@ module.exports = {
             networkTimeoutSeconds: 3, // 网络超时则用缓存
             expiration: {
               maxEntries: 50,
-              maxAgeSeconds: 5 * 60, // 5分钟
+              maxAgeSeconds: 5 * 60, // 5 分钟
             },
           },
         },
@@ -590,7 +590,7 @@ Web Push 使用 **VAPID（Voluntary Application Server Identification）** 协�
 ### ⭐⭐⭐⭐（高频）
 
 1. **PWA 的核心技术有哪些？**
-   - Web App Manifest（可安装）、Service Worker（离线缓存+网络代理）、Web Push（消息推送）
+   - Web App Manifest（可安装）、Service Worker（离线缓存 + 网络代理）、Web Push（消息推送）
    - 基础设施：HTTPS
 
 2. **Service Worker 是什么？和 Web Worker 有什么区别？**

@@ -13,6 +13,8 @@ tags:
 
 # Service Worker 详解
 
+<!-- more -->
+
 ## 【面试速答版】
 
 ### Q1: Service Worker 是什么？它和 Web Worker 有什么区别？
@@ -163,10 +165,10 @@ if ('serviceWorker' in navigator) {
     scope: '/' // SW 控制的路径范围（默认为 SW 脚本所在目录）
   })
     .then(registration => {
-      console.log('SW 注册成功, 状态:', registration.active ? '已激活' : '未激活')
+      console.log('SW 注册成功，状态：', registration.active ? '已激活' : '未激活')
     })
     .catch(err => {
-      console.error('SW 注册失败:', err)
+      console.error('SW 注册失败：', err)
     })
 }
 ```
@@ -429,7 +431,7 @@ SW 和页面之间通过 `postMessage` 通信：
 ```javascript
 // sw.js — 接收消息
 self.addEventListener('message', (event) => {
-  console.log('SW 收到来自页面的消息:', event.data)
+  console.log('SW 收到来自页面的消息：', event.data)
   
   if (event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
@@ -461,7 +463,7 @@ if (navigator.serviceWorker.controller) {
 
 // 页面 — 接收来自 SW 的消息
 navigator.serviceWorker.addEventListener('message', (event) => {
-  console.log('页面收到来自 SW 的消息:', event.data)
+  console.log('页面收到来自 SW 的消息：', event.data)
 })
 ```
 
@@ -538,7 +540,7 @@ async function registerSW() {
       scope: '/'
     })
     
-    console.log('SW 注册成功:', registration.scope)
+    console.log('SW 注册成功：', registration.scope)
     
     // 检测新 SW
     registration.addEventListener('updatefound', () => {
@@ -550,7 +552,7 @@ async function registerSW() {
       })
     })
   } catch (err) {
-    console.error('SW 注册失败:', err)
+    console.error('SW 注册失败：', err)
   }
 }
 
@@ -730,7 +732,7 @@ async function processSyncQueue() {
         body: req.body
       })
     } catch (err) {
-      console.error('同步失败，下次再试:', req.url)
+      console.error('同步失败，下次再试：', req.url)
       return // 失败一个就停止，下次 sync 继续
     }
   }
@@ -748,7 +750,7 @@ Service Worker 也可以接收服务器推送的消息：
 ```javascript
 // sw.js — 推送事件
 self.addEventListener('push', (event) => {
-  console.log('收到推送消息:', event.data.text())
+  console.log('收到推送消息：', event.data.text())
   
   let data
   try {
@@ -824,10 +826,10 @@ async function subscribeToPush() {
   const registration = await navigator.serviceWorker.ready
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true, // 必须为 true，保证每条推送都显示通知
-    applicationServerKey: urlBase64ToUint8Array('你的VAPID公钥')
+    applicationServerKey: urlBase64ToUint8Array('你的 VAPID 公钥')
   })
   
-  console.log('推送订阅成功:', subscription)
+  console.log('推送订阅成功：', subscription)
   
   // 将 subscription 发送给后端
   await fetch('/api/push/subscribe', {
@@ -1016,9 +1018,9 @@ location /sw.js {
 // 检查缓存配额
 if ('storage' in navigator && 'estimate' in navigator.storage) {
   navigator.storage.estimate().then(estimate => {
-    console.log('已使用:', estimate.usage, 'bytes')
-    console.log('配额:', estimate.quota, 'bytes')
-    console.log('使用率:', (estimate.usage / estimate.quota * 100).toFixed(1) + '%')
+    console.log('已使用：', estimate.usage, 'bytes')
+    console.log('配额：', estimate.quota, 'bytes')
+    console.log('使用率：', (estimate.usage / estimate.quota * 100).toFixed(1) + '%')
   })
 }
 ```
@@ -1461,11 +1463,11 @@ async function testServiceWorker() {
   await page.reload({ waitUntil: 'networkidle0' })
   
   const title = await page.title()
-  console.log('离线时页面标题:', title)
+  console.log('离线时页面标题：', title)
   
   // 验证页面内容完整
   const content = await page.evaluate(() => document.body.textContent)
-  console.log('离线时页面内容长度:', content.length)
+  console.log('离线时页面内容长度：', content.length)
   
   await browser.close()
 }
@@ -1478,7 +1480,7 @@ async function testServiceWorker() {
 self.addEventListener('message', (event) => {
   // 只处理来自自己页面的消息
   if (event.origin !== location.origin) {
-    console.warn('收到来自不可信来源的消息:', event.origin)
+    console.warn('收到来自不可信来源的消息：', event.origin)
     return
   }
   
@@ -1594,9 +1596,9 @@ if (navigator.serviceWorker.controller) {
 
 // 方法 2：获取注册信息
 navigator.serviceWorker.getRegistration().then(registration => {
-  console.log('SW 状态:', registration.active?.state) // 'activated'
+  console.log('SW 状态：', registration.active?.state) // 'activated'
   console.log('SW scope:', registration.scope)
-  console.log('SW 脚本:', registration.active?.scriptURL)
+  console.log('SW 脚本：', registration.active?.scriptURL)
 })
 
 // 方法 3：Chrome DevTools
@@ -1604,7 +1606,7 @@ navigator.serviceWorker.getRegistration().then(registration => {
 
 // 方法 4：在 SW 中记录日志
 self.addEventListener('fetch', (event) => {
-  console.log('[SW] 拦截请求:', event.request.url)
+  console.log('[SW] 拦截请求：', event.request.url)
   event.respondWith(fetch(event.request))
 })
 ```
